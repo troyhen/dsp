@@ -1,0 +1,23 @@
+<taglib>
+	<tlibversion>0.1</tlibversion>
+	<jsp-version>1.1</jsp-version>
+	<shortname>file</shortname>
+	<uri>http://www.dsp.com/tags/file/1.0</uri>
+	<info>This tag library implements common file operations</info>
+	<tag>
+		<name>copy</name>
+		<tagclass>com.dsp.tags.file.CopyFileTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>This tag copies files (not folders)</info>
+		<attribute>
+			<name>from</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>to</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>
