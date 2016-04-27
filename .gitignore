@@ -16,3 +16,5 @@ dspSource.zip
 .classpath
 .settings/
 dos/
+/build
+/.gradle

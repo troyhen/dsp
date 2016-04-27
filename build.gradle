@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  provided
+  compile.extendsFrom provided
+}
+
+sourceSets {
+  main {
+    compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+  }
+}
+
+dependencies {
+  provided 'javax.servlet:servlet-api:2.4'
+  provided 'javax.servlet.jsp:jsp-api:2.0'
+  compile 'oro:oro:2.0.8'
+  compile files("${System.properties['java.home']}/../lib/tools.jar")
+}
+
+jar {
+  version = '1.0.1'
+  manifest {
+    attributes("Implementation-Title": "DSP",
+               "Implementation-Version": jar.version)
+  }
+}
