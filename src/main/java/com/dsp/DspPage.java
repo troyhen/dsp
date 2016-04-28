@@ -132,7 +132,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Called from html().
 	 * @see html()
 	 */
-	private static StringBuffer addAnchors(StringBuffer buf)
+	private static StringBuilder addAnchors(StringBuilder buf)
 	{
 		char c;
 		boolean inTag = false, mailto = false;
@@ -351,7 +351,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 			byte[] utf8 = null;
 			try { utf8 = data.getBytes("UTF-8"); } catch (java.io.UnsupportedEncodingException e) {}
 			int len = utf8.length;
-			StringBuffer buf = new StringBuffer(len * 5 / 3);
+			StringBuilder buf = new StringBuilder(len * 5 / 3);
 			int bits = 0, accum = 0, line = 0;
 			for (int ix = 0; ix < len; ix++)
 			{
@@ -471,7 +471,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 */
 	public static String concat(Object[] args)
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		int psize = 0;
 		if (args != null)
 		{
@@ -1160,7 +1160,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	{
 		int ixz;
 		if (text == null || (ixz = text.length()) == 0) return text;
-		StringBuffer buf = new StringBuffer(ixz);
+		StringBuilder buf = new StringBuilder(ixz);
 		String rep = null;
 		for (int ix = 0; ix < ixz; ix++)
 		{
@@ -1462,7 +1462,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		{
 			int ix;
 
-			StringBuffer buf = new StringBuffer(text);
+			StringBuilder buf = new StringBuilder(text);
 			buf.ensureCapacity(text.length() * 5 / 4);
 			addAnchors(buf);
 			htmlCharsBuf(buf);
@@ -1623,9 +1623,9 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 *	 <tr><td>}</td><td>&amp;#125&semi;</td><td>same as above</td></tr>
 	 * </table>
 	 */
-	public static String htmlChars(String text)
+	public static String htmlChars(CharSequence text)
 	{
-		StringBuffer buf = new StringBuffer(text);
+		StringBuilder buf = new StringBuilder(text);
 		buf.ensureCapacity(text.length() * 5 / 4);
 		htmlCharsBuf(buf);
 		String result = buf.toString();
@@ -1633,7 +1633,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		return result;
 	} // htmlChars()
 
-	private static void htmlCharsBuf(StringBuffer buf)
+	private static void htmlCharsBuf(StringBuilder buf)
 	{
 		replaceBuf(buf, "(TM)", "<small><small><sup>TM</sup></small></small>");
 		replaceBuf(buf, "(tm)", "<small><small><sup>TM</sup></small></small>");
@@ -2105,7 +2105,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Return the length of the String.
 	 */
-	public static int length(String data)
+	public static int length(CharSequence data)
 	{
 		int result;
 		if (data == null) result = 0;
@@ -2370,7 +2370,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	{
 		if (path == null || path.length() < 2) return path;
 		int ix = 0;
-		StringBuffer buf = new StringBuffer(path);
+		StringBuilder buf = new StringBuilder(path);
 		char sep = File.separatorChar;
 			// Convert non Posix file separators to slashes
 		if (sep != '/')
@@ -2478,7 +2478,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		int len;
 		boolean unicode = false;
 		if (value == null || (len = value.length()) == 0) return NULL;
-		StringBuffer buf = new StringBuffer(len + len / 10 + 5);
+		StringBuilder buf = new StringBuilder(len + len / 10 + 5);
 		buf.append('\'');
 		for (int ix = 0, iz = value.length(); ix < iz; ix++)
 		{
@@ -2515,7 +2515,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 			if (enclose) return "\"\"";
 			return "";
 		}
-		StringBuffer buf = new StringBuffer(len + len / 10 + 5);
+		StringBuilder buf = new StringBuilder(len + len / 10 + 5);
 		if (enclose) buf.append('"');
 		for (int ix = 0, iz = value.length(); ix < iz; ix++)
 		{
@@ -2559,7 +2559,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		int len;
 		if (value == null) return NULL;
 		if ((len = value.length()) == 0) return "''";
-		StringBuffer buf = new StringBuffer(len + len / 10 + 5);
+		StringBuilder buf = new StringBuilder(len + len / 10 + 5);
 		buf.append('\'');
 		for (int ix = 0, iz = value.length(); ix < iz; ix++)
 		{
@@ -2595,7 +2595,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		int len;
 		if (value == null) return NULL;
 		if ((len = value.length()) == 0) return "''";
-		StringBuffer buf = new StringBuffer(len + len / 10 + 5);
+		StringBuilder buf = new StringBuilder(len + len / 10 + 5);
 		buf.append('"');
 		for (int ix = 0, iz = value.length(); ix < iz; ix++)
 		{
@@ -2635,7 +2635,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 */
 	public static String replace(String str, String sub, String rep)
 	{
-		StringBuffer buf = null;
+		StringBuilder buf = null;
 		int lenS = sub.length();
 		for (int last = 0;;)
 		{
@@ -2649,7 +2649,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 				}
 				break;
 			}
-			if (buf == null) buf = new StringBuffer(str.length() * 3 / 2);
+			if (buf == null) buf = new StringBuilder(str.length() * 3 / 2);
 			buf.append(str.substring(last, ix));
 			buf.append(rep);
 			last = ix + lenS;
@@ -2662,7 +2662,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * by <b>rep</b>.  The buffer argument itself is modifed and returned.  This is faster than
 	 * replace(), especially useful when called multiple times for various replacements.
 	 */
-	public static StringBuffer replaceBuf(StringBuffer buf, String sub, String rep)
+	public static StringBuilder replaceBuf(StringBuilder buf, String sub, String rep)
 	{
 		String str = buf.toString();
 		int lenS = sub.length();
@@ -2816,7 +2816,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	{
 		if (text == null) return text;
 		int end = text.length();
-		StringBuffer buf = new StringBuffer(end * 5 / 4);
+		StringBuilder buf = new StringBuilder(end * 5 / 4);
 //	loop:
 		for (int ix = 0; ix < end; ix++)
 		{
@@ -2890,7 +2890,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 */
   public static String sql(Collection<Object> value) {
 		Iterator<Object> it = value.iterator();
-		StringBuffer buf = new StringBuffer("(");
+		StringBuilder buf = new StringBuilder("(");
 		while (it.hasNext()) {
 			if (buf.length() > 1) buf.append(", ");
 			buf.append(sql(it.next()));
@@ -3039,7 +3039,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Format an array of numbers as an paren enclosed comma delimited list.
 	 */
 /*  public static String sql(Number[] value) {
-		StringBuffer buf = new StringBuffer("(");
+		StringBuilder buf = new StringBuilder("(");
 		for (int ix = 0, ixz = value.length; ix < ixz; ix++) {
 			if (buf.length() > 1) buf.append(", ");
 			buf.append(sql(value[ix]));
@@ -3052,7 +3052,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Format an array of objects as an paren enclosed comma delimited list.
 	 */
   public static String sql(Object[] value) {
-		StringBuffer buf = new StringBuffer("(");
+		StringBuilder buf = new StringBuilder("(");
 		for (int ix = 0, ixz = value.length; ix < ixz; ix++) {
 			if (buf.length() > 1) buf.append(", ");
 			buf.append(sql(value[ix]));
@@ -3065,7 +3065,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Format an array of strings as an paren enclosed comma delimited list.
 	 */
 /*  public static String sql(String[] value) {
-		StringBuffer buf = new StringBuffer("(");
+		StringBuilder buf = new StringBuilder("(");
 		for (int ix = 0, ixz = value.length; ix < ixz; ix++) {
 			if (buf.length() > 1) buf.append(", ");
 			buf.append(sql(value[ix]));
@@ -3239,7 +3239,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		{
 			boolean inHtml = false, space = false;
 			int iz = text.length();
-			StringBuffer buf = new StringBuffer(iz);
+			StringBuilder buf = new StringBuilder(iz);
 			for (int ix = 0; ix < iz; ix++)
 			{
 				char c = text.charAt(ix);
@@ -3279,7 +3279,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	{
 		int len = 0;
 		if (text == null || (len = text.length()) == 0) return text;
-		StringBuffer buf = new StringBuffer(len);
+		StringBuilder buf = new StringBuilder(len);
 		for (int ix = 0; ix < len; ix++)
 		{
 			char c = text.charAt(ix);
@@ -3357,7 +3357,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 		if (text == null || (ixz = text.length()) == 0) result = text;
 		else
 		{
-			StringBuffer buf = new StringBuffer(ixz);
+			StringBuilder buf = new StringBuilder(ixz);
 			for (int ix = 0; ix < ixz; ix++)
 			{
 				char c = text.charAt(ix);
@@ -3652,7 +3652,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	private static String url(String value, boolean partial)
 	{
 		if (value == null) return null;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int ix = 0, end = value.length(); ix < end; ix++)
 		{
 			char c = value.charAt(ix);
