@@ -184,10 +184,11 @@ class DspCompile
 
 	private String classPath() throws DspException {
 		StringBuilder buf = new StringBuilder();
+		String sep = File.pathSeparator;
 		URL[] urls = ((URLClassLoader) DspServlet.class.getClassLoader()).getURLs();
 		for (URL url : urls) {
 			if ("file".equalsIgnoreCase(url.getProtocol())) {
-				if (buf.length() > 0) buf.append(';');
+				if (buf.length() > 0) buf.append(sep);
 				buf.append(url.getPath());
 			}
 		}
