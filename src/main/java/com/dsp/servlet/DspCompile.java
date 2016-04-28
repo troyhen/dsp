@@ -189,10 +189,23 @@ class DspCompile
 		for (URL url : urls) {
 			if ("file".equalsIgnoreCase(url.getProtocol())) {
 				if (buf.length() > 0) buf.append(sep);
-				buf.append(url.getPath());
+				buf.append(DspPage.fromUrl(url.getPath()));
 			}
 		}
-		if (DEBUG) System.out.println("-cp " + buf);
+//		urls = ((URLClassLoader) HttpServlet.class.getClassLoader()).getURLs();
+//		for (URL url : urls) {
+//			if ("file".equalsIgnoreCase(url.getProtocol())) {
+//				if (buf.length() > 0) buf.append(sep);
+//				buf.append(url.getPath());
+//			}
+//		}
+		urls = ((URLClassLoader) HttpJspPage.class.getClassLoader()).getURLs();
+		for (URL url : urls) {
+			if ("file".equalsIgnoreCase(url.getProtocol())) {
+				if (buf.length() > 0) buf.append(sep);
+				buf.append(DspPage.fromUrl(url.getPath()));
+			}
+		}
 		return buf.toString();
 //		StringBuilder buf = new StringBuilder();
 //		buf.append(servlet.get("classPath", System.getProperty("java.class.path")));
@@ -211,7 +224,6 @@ class DspCompile
 //				}
 //			}
 //		}
-//		if (DEBUG) System.out.println("-cp " + buf);
 //		return buf.toString();
 	} // classPath()
 
