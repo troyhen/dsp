@@ -266,7 +266,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Decode a Base64 String.  This decodes a String that has been encoded with Base64
 	 * encoding, as defined in RFC 1521.
 	 */
-	public static String base64Decode(String data)
+	public static String base64Decode(CharSequence data)
 	{
 		String result = null;
 		if (data != null)
@@ -342,14 +342,14 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Encode a Base64 String.  This encodes a String using Base64 encoding, as defined in
 	 * RFC 1521.
 	 */
-	public static String base64Encode(String data)
+	public static String base64Encode(CharSequence data)
 	{
 		String result;
 		if (data == null) result = null;
 		else
 		{
 			byte[] utf8 = null;
-			try { utf8 = data.getBytes("UTF-8"); } catch (java.io.UnsupportedEncodingException e) {}
+			try { utf8 = data.toString().getBytes("UTF-8"); } catch (java.io.UnsupportedEncodingException e) {}
 			int len = utf8.length;
 			StringBuilder buf = new StringBuilder(len * 5 / 3);
 			int bits = 0, accum = 0, line = 0;
@@ -853,20 +853,20 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Make object ready for use in an SQL where clause.  Outputs an '=' if value is set
 	 * or 'is' if not, then converts the value to an Integer and outputs the value.
-	 * @see quote(String)
+	 * @see quote(CharSequence)
 	 */
 	public static String eqInteger(Object value)
 	{
-		return (value == null || (value instanceof String && ((String)value).length() == 0)
+		return (value == null || (value instanceof CharSequence && ((CharSequence) value).length() == 0)
 				? "is " : "= ") + sqlInteger(value);
 	} // eqInteger()
 
 	/**
 	 * Make String ready for use in an SQL where clause.  Outputs an '=' if value is set
 	 * or 'is' if not, then quotes and outputs the value.
-	 * @see quote(String)
+	 * @see quote(CharSequence)
 	 */
-	public static String eqQuote(String value)
+	public static String eqQuote(CharSequence value)
 	{
 		return (value == null || value.length() == 0 ? " is " : " = ") + quote(value);
 	} // eqQuote()
@@ -874,11 +874,11 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Make object ready for use in an SQL where clause.  Outputs an '=' if value is set
 	 * or 'is' if not, then quotes and outputs the value.
-	 * @see quote(String)
+	 * @see quote(CharSequence)
 	 */
 	public static String eqSql(Object value)
 	{
-		if (value == null || value instanceof String) return eqQuote((String)value);
+		if (value == null || value instanceof CharSequence) return eqQuote((CharSequence)value);
 		if (value instanceof Object[] || value instanceof String[]
 				|| value instanceof Number[] || value instanceof Collection) return " in " + sql(value);
 		return " = " + sql(value);
@@ -1154,12 +1154,14 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Convert from HTML to Unicode text.  This function converts many of the encoded HTML
 	 * characters to normal Unicode text.  Example: &amp;lt&semi; to &lt;.  This is the opposite
 	 * of showHtml().
-	 * @see showHtml(String)
+	 * @see showHtml(CharSequence)
 	 */
-	public static String fromHtml(String text)
+	public static String fromHtml(CharSequence text)
 	{
+		if (text == null) return null;
 		int ixz;
-		if (text == null || (ixz = text.length()) == 0) return text;
+		String string = text.toString();
+		if ((ixz = text.length()) == 0) return string;
 		StringBuilder buf = new StringBuilder(ixz);
 		String rep = null;
 		for (int ix = 0; ix < ixz; ix++)
@@ -1167,7 +1169,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 			char c = text.charAt(ix);
 			if (c == '&');
 			{
-				String sub = text.substring(ix + 1).toLowerCase();
+				String sub = string.substring(ix + 1).toLowerCase();
 				if (sub.startsWith("lt;"))
 				{
 					c = '<';
@@ -1453,11 +1455,12 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 *	 <tr><td>}</td><td>&amp;#125&semi;</td><td>same as above</td></tr>
 	 * </table>
 	 */
-	public static String html(String text)
+	public static String html(CharSequence text)
 	{
-		String org = text;
+		if (text == null) return null;
+		String org = text.toString();
 		String result;
-		if (text == null || isHtml(text)) result = text;
+		if (text == null || isHtml(text)) result = org;
 		else
 		{
 			int ix;
@@ -1976,12 +1979,12 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Returns true if the String begins and ends with HTML tags.
 	 */
-	public static boolean isHtml(String text)
+	public static boolean isHtml(CharSequence text)
 	{
 		boolean result = false;
 		if (text != null)
 		{
-			String temp = text.trim();
+			String temp = text.toString().trim();
 			int end = temp.length();
 			if (end >= 3 && temp.charAt(0) == '<'
 					&& temp.charAt(end - 1) == '>') result = true;
@@ -2121,15 +2124,15 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Truncate the String to lim characters, from the left.
 	 * @see rlimit()
 	 */
-	public static String limit(String data, int lim)
+	public static String limit(CharSequence data, int lim)
 	{
 		String result = null;
 		if (lim > 0)
 		{
-			result = data;
+			result = data.toString();
 			if (data != null && data.length() > lim)
 			{
-				result = data.substring(0, lim);
+				result = result.substring(0, lim);
 			}
 		}
 		if (DEBUG_MODE) ThreadState.logln("limit(" + data + ", " + lim + ") -> " + result);
@@ -2139,11 +2142,11 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Convert String to lower case.
 	 */
-	public static String lowerCase(String arg)
+	public static String lowerCase(CharSequence arg)
 	{
 		String result;
 		if (arg == null) result = null;
-		else result = arg.toLowerCase();
+		else result = arg.toString().toLowerCase();
 		if (DEBUG_MODE) ThreadState.logln("lowerCase(" + arg + ") -> " + arg);
 		return result;
 	} // lowerCase()
@@ -2471,9 +2474,9 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Make String ready for use in an SQL statement.  Adds single quotes around the string
 	 * and quotes embeded quotes.
-	 * @see sql(String)
+	 * @see sql(CharSequence)
 	 */
-	public static String quote(String value)
+	public static String quote(CharSequence value)
 	{
 		int len;
 		boolean unicode = false;
@@ -2507,7 +2510,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * &quot;, and <> to &lt; and &gt;.  It will enclose the resulting string in double quotes if
      * the second parameter is true.
 	 */
-	public static String quoteHtml(String value, boolean enclose)
+	public static String quoteHtml(CharSequence value, boolean enclose)
 	{
 		int len;
 		if (value == null || (len = value.length()) == 0)
@@ -2544,7 +2547,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Make String ready for use as a double quoted HTML attribute.  Converts embeded quotes to
 	 * &quot;.  It will not enclose the resulting string in double quotes.
 	 */
-	public static String quotes(String value)
+	public static String quotes(CharSequence value)
 	{
 		return quoteHtml(value, false);
 	} // quotes()
@@ -2552,9 +2555,9 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Make String ready for use in a JavaScript expression.  Adds single quotes around the string
 	 * and backslashes embeded quotes.
-	 * @see _script(String)
+	 * @see _script(CharSequence)
 	 */
-	public static String quoteScript(String value)
+	public static String quoteScript(CharSequence value)
 	{
 		int len;
 		if (value == null) return NULL;
@@ -2588,9 +2591,9 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Make String ready for use in a JavaScript expression.  Adds double quotes around the string
 	 * and backslashes embeded quotes.
-	 * @see quotes(String)
+	 * @see quotes(CharSequence)
 	 */
-	public static String quotesScript(String value)
+	public static String quotesScript(CharSequence value)
 	{
 		int len;
 		if (value == null) return NULL;
@@ -2633,28 +2636,30 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Substring Replacer. For each instance of <b>sub</b> found in <b>str</b>, it is replaced
 	 * by <b>rep</b>.  The resulting String is returned.
 	 */
-	public static String replace(String str, String sub, String rep)
+	public static String replace(CharSequence str, String sub, String rep)
 	{
+		if (str == null) return null;
+		String string = str.toString();
 		StringBuilder buf = null;
 		int lenS = sub.length();
 		for (int last = 0;;)
 		{
-			int ix = str.indexOf(sub, last);
+			int ix = string.indexOf(sub, last);
 			if (ix < 0)
 			{
 				if (buf != null)
 				{
-					buf.append(str.substring(last));
-					str = buf.toString();	// return str as result
+					buf.append(string.substring(last));
+					string = buf.toString();	// return string as result
 				}
 				break;
 			}
-			if (buf == null) buf = new StringBuilder(str.length() * 3 / 2);
-			buf.append(str.substring(last, ix));
+			if (buf == null) buf = new StringBuilder(string.length() * 3 / 2);
+			buf.append(string.substring(last, ix));
 			buf.append(rep);
 			last = ix + lenS;
 		}
-		return str;
+		return string;
 	} // replace()
 
 	/**
@@ -2691,16 +2696,16 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * Truncate the String to lim characters, from the right.
 	 * @see limit()
 	 */
-	public static String rlimit(String data, int lim)
+	public static String rlimit(CharSequence data, int lim)
 	{
 		String result = null;
 		if (data != null && lim > 0)
 		{
-			result = data;
+			result = data.toString();
 			int len;
 			if (data != null && (len = data.length()) > lim)
 			{
-				result = data.substring(len - lim);
+				result = result.substring(len - lim);
 			}
 		}
 		if (DEBUG_MODE) ThreadState.logln("rlimit(" + data + ", " + lim + ") -> " + result);
@@ -2810,11 +2815,11 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Convert characters not allowed in HTML to allowable characters.  Example:
 	 * &lt; to &amp;lt&semi;.  This is the opposite of fromHtml().
-	 * @see fromHtml(String)
+	 * @see fromHtml(CharSequence)
 	 */
-	public static String showHtml(String text)
+	public static String showHtml(CharSequence text)
 	{
-		if (text == null) return text;
+		if (text == null) return null;
 		int end = text.length();
 		StringBuilder buf = new StringBuilder(end * 5 / 4);
 //	loop:
@@ -2967,10 +2972,10 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Format String for use in SQL. This function converts the data to a String suitable for use in an SQL statement.
 	 */
-	public static String sql(String value)
+	public static String sql(CharSequence value)
 	{
 		return quote(value);
-	} // sql(String)
+	} // sql(CharSequence)
 
 	/**
 	 * Format Time for use in SQL. This function converts the data to a String suitable for use in an SQL statement.
@@ -3149,9 +3154,9 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Convert object to a String and format it suitable for use in an SQL statement.
 	 * Same as calling quote().
-	 * @see quote(String)
+	 * @see quote(CharSequence)
 	 */
-	public static String sqlString(String arg)
+	public static CharSequence sqlString(CharSequence arg)
 	{
 		return quote(arg);
 	} // sqlString()
@@ -3231,10 +3236,12 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Strips out all HTML tags from the String.
 	 */
-	public static String stripHtml(String text)
+	public static String stripHtml(CharSequence text)
 	{
 		String result;
-		if (text == null || text.length() < 3) result = text;
+		if (text == null) result = null;
+		else
+		if (text.length() < 3) result = text.toString();
 		else
 		{
 			boolean inHtml = false, space = false;
@@ -3291,12 +3298,15 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Strips out all anchor tags and references to an internet server.
 	 */
-	public static String stripLinks(String text)
+	public static String stripLinks(CharSequence text)
 	{
 		String result;
-		if (text == null || text.length() < 4) result = text;
+		if (text == null) result = null;
+		else
+		if (text.length() < 4) result = text.toString();
 		else
 		{
+			String string = text.toString();
 			for (int ix = 0, end = types.length; ix < end; ix++)
 			{
 //				if (DEBUG_MODE) BZVar.logln("ix " + ix);
@@ -3307,32 +3317,32 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 					int index = 0;
 					for (;;)
 					{
-						index = text.indexOf(type, index);
+						index = string.indexOf(type, index);
 						if (index < 0) break;
 //						if (DEBUG_MODE) BZVar.logln("index " + index);
 						char c = type.charAt(0);
 						if (c == '<')
 						{
 							int iend = index + type.length();
-							if (text.length() > iend)
+							if (string.length() > iend)
 							{
-								c = text.charAt(iend);
+								c = string.charAt(iend);
 								if (c < '0'
 										|| (c > '9' && c < 'A')
 										|| (c > 'Z' && c < 'a')
 										|| c > 'z')
 								{
-									text = stripTag(text, index);
+									string = stripTag(string, index);
 								}
 							}
 							else index++;
 						}
-						else text = stripContig(text, index);
+						else string = stripContig(string, index);
 					}
 					type = type.toUpperCase();
 				}
 			}
-			result = text;
+			result = string;
 		}
 		if (DEBUG_MODE) ThreadState.logln("stripLinks(" + text + ") -> " + result);
 		return result;
@@ -3350,11 +3360,13 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Strips all whitespace from the string.
 	 */
-	public static String stripSpace(String text)
+	public static String stripSpace(CharSequence text)
 	{
 		String result;
 		int ixz;
-		if (text == null || (ixz = text.length()) == 0) result = text;
+		if (text == null) result = null;
+		else
+		if ((ixz = text.length()) == 0) result = text.toString();
 		else
 		{
 			StringBuilder buf = new StringBuilder(ixz);
@@ -3625,11 +3637,11 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Trims the whitespace from the beginning and end of the String.
 	 */
-	public static String trim(String arg)
+	public static String trim(CharSequence arg)
 	{
 		String result;
 		if (arg == null) result = null;
-		else result = arg.trim();
+		else result = arg.toString().trim();
 		if (DEBUG_MODE) ThreadState.logln("trim(" + arg + ") -> " + result);
 		return result;
 	} // trim()
@@ -3637,7 +3649,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Convert String to upper case. This function converts all characters of arg to upper case.
 	 */
-	public static String upperCase(String arg)
+	public static String upperCase(CharSequence arg)
 	{
 		String result;
 		if (arg == null) result = null;
@@ -3649,7 +3661,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	/**
 	 * Used by both url() and urlFull() to do their jobs, since the are so similar.
 	 */
-	private static String url(String value, boolean partial)
+	private static String url(CharSequence value, boolean partial)
 	{
 		if (value == null) return null;
 		StringBuilder buf = new StringBuilder();
@@ -3677,7 +3689,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * need to put a field value into an HTML URL, on the right side of the ? character.
 	 * @see urlFull(String)
 	 */
-	public static String url(String value)
+	public static String url(CharSequence value)
 	{
 		String result = url(value, true);
 		if (DEBUG_MODE) ThreadState.logln("url(" + value + ") -> " + result);
@@ -3690,7 +3702,7 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 * need to format a String to be the entire URL.
 	 * @see url(String)
 	 */
-	public static String urlFull(String value)
+	public static String urlFull(CharSequence value)
 	{
 		String result = url(value, false);
 		if (DEBUG_MODE) ThreadState.logln("urlFull(" + value + ") -> " + result);
