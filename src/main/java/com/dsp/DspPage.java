@@ -1234,6 +1234,42 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	} // fromHtml()
 
 	/**
+	 * Convert from URL encoded string to Unicode text.  This function converts many 
+	 * of the encoded HTML characters to normal Unicode text.  
+	 * Example: &amp;lt&semi; to &lt;.  This is the opposite of url().
+	 * @see showHtml(CharSequence)
+	 */
+	public static String fromUrl(CharSequence text)
+	{
+		if (text == null) return null;
+		String string = text.toString();
+		int ixz;
+		if ((ixz = text.length()) == 0) return string;
+		StringBuilder buf = new StringBuilder(ixz);
+		String rep = null;
+		for (int ix = 0; ix < ixz; ix++)
+		{
+			char c = text.charAt(ix);
+			if (c == '%')
+			{
+				c = (char) Integer.parseInt(string.substring(ix + 1, ix + 3), 16);
+				ix += 2;
+			}
+			if (c == '+')
+			{
+				c = ' ';
+			}
+			if (rep != null)
+			{
+				buf.append(rep);
+				rep = null;
+			}
+			else buf.append(c);
+		}
+		return buf.toString();
+	} // fromUrl()
+
+	/**
 	 * Real number subtraction.  Each argument is subtracted from the first.  If no arguments
 	 * are submitted then the result is 0.
 	 * Any null arguments are ignored.
