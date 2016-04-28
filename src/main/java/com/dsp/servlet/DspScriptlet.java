@@ -25,7 +25,7 @@ class DspScriptlet extends DspToken implements Output
 		super(eat, args);
 	} // DspScriptlet()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level)
+	public int doJava(DspCompile comp, StringBuilder buf, int level)
 	{
 		return rawJava(args, comp, buf, level);
 	} // doJava()
@@ -36,9 +36,9 @@ class DspScriptlet extends DspToken implements Output
 		return text.charAt(ix + 1) == c;
 	} // next()
 
-	static int rawJava(List<DspArg> args, DspCompile comp, StringBuffer buf, int level)
+	static int rawJava(List<DspArg> args, DspCompile comp, StringBuilder buf, int level)
 	{
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		boolean newLine = true, literal = false, string = false, cstr = false, skipWhite = true,
 				slashComment = false, starComment = false;
 		char c = 0;

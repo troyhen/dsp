@@ -17,6 +17,8 @@ package com.dsp.util;
 import java.io.*;    		// input and output from and to url or page
 import java.net.*;   		// URL for http and https and ftp
 
+import com.dsp.DspPage;
+
 /**
 * This class provides support for talking to a url through various
 * protocols.  It is more of a facilitator class that encapsulates the java URL and URLConnection classes.
@@ -214,8 +216,8 @@ public class BZUrl
 	{  // basic authorization
 		if (trace) log.println("BZUrl.setBasicAuth()");
 		String uidPwd = uid + ':' + pwd;
-		String authStr = "BASIC " + new sun.misc.BASE64Encoder().encode(uidPwd.getBytes());
-//		String authStr = "BASIC " + DspPage.base64Encode(uidPwd);
+//		String authStr = "BASIC " + new sun.misc.BASE64Encoder().encode(uidPwd.getBytes());
+		String authStr = "BASIC " + DspPage.base64Encode(uidPwd);
 		connection.setRequestProperty("Authorization", authStr);
 		if (debug) log.println("url.setBasicAuth() -> " + authStr);
 	} // setBasicAuth()

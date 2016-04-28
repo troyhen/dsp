@@ -27,7 +27,7 @@ class DspWhile extends DspIf
 		super(eat, args, name, index);
 	} // DspWhile()
 
-	int doElse(DspCompile comp, StringBuffer buf, int level)
+	int doElse(DspCompile comp, StringBuilder buf, int level)
 	{
 //		if (statement)
 //		{
@@ -37,7 +37,7 @@ class DspWhile extends DspIf
 		return super.doElse(comp, buf, level, ifTag != null ? ifTag.getName() : getName());
 	} // doElse()
 
-	int doEnd(DspCompile comp, StringBuffer buf, int level)
+	int doEnd(DspCompile comp, StringBuilder buf, int level)
 	{
 		if (ifTag != null)
 		{
@@ -62,9 +62,9 @@ class DspWhile extends DspIf
 		return level;
 	} // doEnd()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		int oldLevel = level;
 		String name;
 		if (ifTag != null)

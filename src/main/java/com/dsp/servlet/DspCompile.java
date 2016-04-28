@@ -60,12 +60,11 @@ class DspCompile
 	private ArrayList<DspCompile>	inserts;
 	private DspParse				parse;
 	private String					isErrorPage;
-//	private String					classPath;
 
 	DspCompile(DspServlet servlet, HttpServletRequest req, URL url,
 			boolean flush) throws IOException, DspException
 	{
-//System.out.println("DspCompile page " + url);
+		if (DEBUG) System.out.println("DSP compiler page: " + url);
 		this.servlet = servlet;
 		pageUrl = url;
 		this.flush = flush;
@@ -84,15 +83,15 @@ class DspCompile
 		pkg = pathToPackage(fullPath);
 		className = fileToClass(fileName);
 		fullName = pkg + '.' + className;
-//System.out.println("compiler class = " + fullName);
+		if (DEBUG) System.out.println("DSP compiler class: " + fullName);
 		pageDate = Long.MIN_VALUE;
 		String tempDir = servlet.getTempFolder();
 		String javaRoot = tempDir + File.separator + "dsp" + File.separator + "source";
 		javaFile = new File(javaRoot + fullPath + File.separator + className + ".java");
-//System.out.println("compiler source: " + javaFile);
+		if (DEBUG) System.out.println("DSP compiler source: " + javaFile);
 		classRoot = tempDir + File.separator + "dsp" + File.separator + "class";
 		classFile = new File(classRoot + fullPath + File.separator + className + ".class");
-//System.out.println("compiler class: " + classFile);
+		if (DEBUG) System.out.println("DSP compiler class: " + classFile);
 		String propUrl = pageUrl.toString();
 		ix = propUrl.lastIndexOf('/');
 		propUrl = propUrl.substring(0, ix + 1);
@@ -117,13 +116,14 @@ class DspCompile
 	@SuppressWarnings("deprecation")
 	private boolean buildClass() throws DspException, IOException, NoClassDefFoundError
 	{
-		if (DEBUG) System.out.println("Compiling " + classFile);
+		if (DEBUG) System.out.println("DSP Compiling " + classFile);
 		String as[];
 		as = new String[5];
 		int ix = 0;
 		as[ix++] = "-classpath";
 		as[ix++] = classPath();
-//System.out.println("compiler classpath: " + as[ix - 1]);
+		if (DEBUG) System.out.println("DSP Compiler classpath: " + as[ix - 1]);
+//System.out.println("DSP System classpath: " + System.getProperty("java.class.path"));
 		as[ix++] = "-d";
 		as[ix++] = classRoot;
 		as[ix++] = javaFile.getAbsolutePath();	//path + '/' + javaFile.getName();
@@ -163,7 +163,7 @@ class DspCompile
 
 	private void buildJava(HttpServletRequest req) throws IOException, DspException
 	{
-		if (DEBUG) System.out.println("Writing " + javaFile);
+		if (DEBUG) System.out.println("DSP compiler file: " + javaFile);
 //		tempCount = 1;
 		new File(javaFile.getParent()).mkdirs();
 		out = new PrintWriter(new FileOutputStream(javaFile));
@@ -183,25 +183,35 @@ class DspCompile
 	} // buildJava()
 
 	private String classPath() throws DspException {
-		StringBuffer buf = new StringBuffer();
-		buf.append(servlet.get("classPath", System.getProperty("java.class.path")));
-		if (pageUrl.getProtocol().equalsIgnoreCase("file")) {
-			File file = new File(new File(pageUrl.getFile()).getParentFile(), "WEB-INF/classes");
-			if (file.exists() && file.isDirectory()) {
-				buf.append(File.pathSeparatorChar);
-				buf.append(file);
-			}
-			file = new File(file.getParentFile(), "lib");
-			if (file.exists() && file.isDirectory()) {
-				File[] list = file.listFiles();
-				for (int ix = 0, ixz = list.length; ix < ixz; ix++) {
-					buf.append(File.pathSeparatorChar);
-					buf.append(list[ix]);
-				}
+		StringBuilder buf = new StringBuilder();
+		URL[] urls = ((URLClassLoader) DspServlet.class.getClassLoader()).getURLs();
+		for (URL url : urls) {
+			if ("file".equalsIgnoreCase(url.getProtocol())) {
+				if (buf.length() > 0) buf.append(';');
+				buf.append(url.getPath());
 			}
 		}
 		if (DEBUG) System.out.println("-cp " + buf);
 		return buf.toString();
+//		StringBuilder buf = new StringBuilder();
+//		buf.append(servlet.get("classPath", System.getProperty("java.class.path")));
+//		if (pageUrl.getProtocol().equalsIgnoreCase("file")) {
+//			File file = new File(new File(pageUrl.getFile()).getParentFile(), "WEB-INF/classes");
+//			if (file.exists() && file.isDirectory()) {
+//				buf.append(File.pathSeparatorChar);
+//				buf.append(file);
+//			}
+//			file = new File(file.getParentFile(), "lib");
+//			if (file.exists() && file.isDirectory()) {
+//				File[] list = file.listFiles();
+//				for (int ix = 0, ixz = list.length; ix < ixz; ix++) {
+//					buf.append(File.pathSeparatorChar);
+//					buf.append(list[ix]);
+//				}
+//			}
+//		}
+//		if (DEBUG) System.out.println("-cp " + buf);
+//		return buf.toString();
 	} // classPath()
 
 	/**
@@ -381,9 +391,9 @@ class DspCompile
 		out.println("if (prop.authorize(pageContext)) return;");
 	} // do4FuncTop()
 
-	private StringBuffer do5Tokens(HttpServletRequest req) throws IOException, DspException
+	private StringBuilder do5Tokens(HttpServletRequest req) throws IOException, DspException
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int ix = 0, iz = tokens.size(); ix < iz; ix++)
 		{
 			Token token = (Token)tokens.get(ix);
@@ -461,9 +471,9 @@ class DspCompile
 		}
 	} // do6FuncEnd()
 
-	private StringBuffer do7Members() throws DspParseException
+	private StringBuilder do7Members() throws DspParseException
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("\r\n");
 		for (int ix = 0, iz = tokens.size(); ix < iz; ix++)
 		{
@@ -502,7 +512,7 @@ class DspCompile
 		}
 	} // doTabs()
 
-	public static void doTabs(StringBuffer buf, int level)
+	public static void doTabs(StringBuilder buf, int level)
 	{
 		for (int ix = 0; ix < level; ix++)
 		{
@@ -514,7 +524,7 @@ class DspCompile
 	{
 		name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
 		int iz = name.length();
-		StringBuffer buf = new StringBuffer(iz);
+		StringBuilder buf = new StringBuilder(iz);
 		for (int ix = 0; ix < iz; ix++)
 		{
 			char c = name.charAt(ix);
@@ -758,7 +768,7 @@ class DspCompile
 		"transient", "true", "try", "var", "void", "volatile", "while"
 	};
 
-	private static void pathFix(String word, StringBuffer buf)
+	private static void pathFix(String word, StringBuilder buf)
 	{
 //ThreadState.log("pathFix(" + word + ") -> " + word);
 		for (int iy = 0, iyz = reserved.length; iy < iyz; iy++)
@@ -780,7 +790,7 @@ class DspCompile
 	static String pathToPackage(String path)
 	{
 		int ixz = path.length();
-		StringBuffer buf = new StringBuffer(ixz);
+		StringBuilder buf = new StringBuilder(ixz);
 		int last = 0;
 		for (int ix = 0; ix < ixz; ix++)
 		{

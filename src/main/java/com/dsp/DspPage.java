@@ -1660,6 +1660,42 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	} // htmlCharsBuf()
 
 	/**
+	 * Join a sequence into a single string, separated by sep.
+	 * Items that are null are skipped.
+	 * @param list list of items
+	 * @param sep separator
+	 * @return joined string
+	 */
+	public static CharSequence join(Collection<?> list, String sep) {
+	    StringBuilder result = new StringBuilder();
+	    for (Object item : list) {
+	    	if (item != null) {
+		        if (result.length() > 0) result.append(sep);
+		        result.append(item);
+	    	}
+	    }
+	    return result;
+	}
+
+	/**
+	 * Join a sequence into a single string, separated by sep.
+	 * Items that are null are skipped.
+	 * @param list list of items
+	 * @param sep separator
+	 * @return joined string
+	 */
+	public static CharSequence join(Object[] list, String sep) {
+	    StringBuilder result = new StringBuilder();
+	    for (Object item : list) {
+	    	if (item != null) {
+		        if (result.length() > 0) result.append(sep);
+		        result.append(item);
+	    	}
+	    }
+	    return result;
+	}
+	
+	/**
 	 * Binary multiplexer,  If the first argument evaluates to true then the second argument
 	 * is returned. If false, the third argument is return, or null if there was no third argument.
 	 */

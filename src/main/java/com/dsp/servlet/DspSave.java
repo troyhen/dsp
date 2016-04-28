@@ -29,11 +29,11 @@ class DspSave extends DspToken implements Output
 //		name = DspFactory.getUnique("_save");
 	} // DspSave()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		DspCompile.doTabs(buf, level);
 		buf.append("pageContext.save(");
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		boolean more = false, needComma = true;
 		int ix = 0, ixz = args.size();
 		for (; ix < ixz; ix++)

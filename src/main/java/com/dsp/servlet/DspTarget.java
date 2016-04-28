@@ -25,11 +25,11 @@ class DspTarget extends DspToken implements Output
 		super(eat, args);
 	} // DspTarget()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		DspCompile.doTabs(buf, level);
 		buf.append("out = pageContext.target(");
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		boolean more = false;
 		for (int ix = 0, ixz = args.size(); ix < ixz; ix++)
 		{

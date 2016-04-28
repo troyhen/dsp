@@ -40,7 +40,7 @@ class DspTagExt extends DspToken implements Output
 		this.name = '_' + prefix + '_' + action + index;
 	} // DspTagExt()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		String className = lib.getClassName();
 		DspCompile.doTabs(buf, level);

@@ -25,7 +25,7 @@ class DspOutput extends DspToken implements Output
 		super(eat, args);
 	} // DspOutput()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level)
+	public int doJava(DspCompile comp, StringBuilder buf, int level)
 	{
 		if (args != null)
 		{

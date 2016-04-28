@@ -25,7 +25,7 @@ class DspMember extends DspToken implements Declaration
 		super(eat, args);
 	} // DspMember()
 
-	public void doMember(DspCompile comp, StringBuffer buf) throws DspParseException
+	public void doMember(DspCompile comp, StringBuilder buf) throws DspParseException
 	{
 		DspScriptlet.rawJava(args, comp, buf, 1);
 	} // doMember()

@@ -25,7 +25,7 @@ class DspSource extends DspToken implements Output
 		super(eat, args);
 	} // DspSource()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		return level;
 	} // doJava()

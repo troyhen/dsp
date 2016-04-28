@@ -29,7 +29,7 @@ class TagAttr
 		this.name = name;
 	} // TagAttr()
 
-	void doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	void doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		buf.append(".set");
 		buf.append(Character.toUpperCase(name.charAt(0)));

@@ -37,7 +37,7 @@ class DspDo extends DspToken implements Output
 		else this.name = name;
 	} // DspDo()
 
-	int doEnd(DspCompile comp, StringBuffer buf, int level)
+	int doEnd(DspCompile comp, StringBuilder buf, int level)
 	{
 		if (transaction)
 		{
@@ -78,7 +78,7 @@ class DspDo extends DspToken implements Output
 		return level;
 	} // doEnd()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		int oldLevel = level;
 		DspArg arg;
@@ -88,7 +88,7 @@ class DspDo extends DspToken implements Output
 		{
 			transaction = true;
 		}
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		DspCompile.doTabs(buf2, level);
 		buf2.append("DspStatement ");
 		buf2.append(name);

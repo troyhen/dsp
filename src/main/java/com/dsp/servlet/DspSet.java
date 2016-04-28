@@ -35,12 +35,12 @@ class DspSet extends DspToken implements Output
 	private static final int EXPR = 2;
 	private static final int STMT = 3;
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		if (args.size() == 0) throw new DspParseException(
 				"set and default require a variable reference and statement or expression",
 				getTokenIndex(), comp);
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		int phase = VAR;
 		DspArg arg0 = args.get(0);
 		String ref = arg0.getText();
@@ -96,11 +96,11 @@ class DspSet extends DspToken implements Output
 		return level;
 	} // doJava()
 
-	protected void doRefClose(StringBuffer buf)
+	protected void doRefClose(StringBuilder buf)
 	{
 	} // doRefClose()
 
-	protected void doRefOpen(StringBuffer buf, String var)
+	protected void doRefOpen(StringBuilder buf, String var)
 	{
 		buf.append(var);
 		buf.append(" = ");

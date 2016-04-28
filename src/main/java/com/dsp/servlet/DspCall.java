@@ -30,7 +30,7 @@ class DspCall extends DspToken implements Output
 //		name = DspFactory.getUnique("_call");
 	} // DspCall()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		if (voidFlag)
 		{
@@ -39,7 +39,7 @@ class DspCall extends DspToken implements Output
 		}
 		DspCompile.doTabs(buf, level);
 		buf.append("pageContext.include(");
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		boolean more = false;
 		for (int ix = 0, ixz = args.size(); ix < ixz; ix++)
 		{

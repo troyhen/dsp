@@ -27,7 +27,7 @@ class DspEnd extends DspToken implements Output
 		super(eat, args);
 	} // DspEnd()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		return doTag.doEnd(comp, buf, level);
 	} // doJava()

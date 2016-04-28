@@ -25,7 +25,7 @@ class DspElse extends DspEnd
 		super(eat, args);
 	} // DspElse()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		return ((DspIf)doTag).doElse(comp, buf, level);
 	} // doJava()

@@ -27,12 +27,12 @@ class DspIf extends DspDo
 		super(eat, args, name, index);
 	} // DspIf()
 
-	int doElse(DspCompile comp, StringBuffer buf, int level)
+	int doElse(DspCompile comp, StringBuilder buf, int level)
 	{
 		return doElse(comp, buf, level, getName());
 	} // doElse()
 
-	protected int doElse(DspCompile comp, StringBuffer buf, int level, String name)
+	protected int doElse(DspCompile comp, StringBuilder buf, int level, String name)
 	{
 		if (statement)
 		{
@@ -47,7 +47,7 @@ class DspIf extends DspDo
 		return level;
 	} // doElse()
 
-	int doEnd(DspCompile comp, StringBuffer buf, int level)
+	int doEnd(DspCompile comp, StringBuilder buf, int level)
 	{
 		String name = getName();
 		if (statement)
@@ -72,9 +72,9 @@ class DspIf extends DspDo
 		return level;
 	} // doEnd()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		int oldLevel = level;
 		String name = getName();
 		if (statement)

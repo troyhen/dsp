@@ -23,7 +23,7 @@ class JspDeclaration extends JspToken implements Declaration
 		super(text);
 	} // JspDeclaration()
 
-	public void doMember(DspCompile comp, StringBuffer buf) throws DspParseException
+	public void doMember(DspCompile comp, StringBuilder buf) throws DspParseException
 	{
 /*		int level = 1;
 		for (int ix = 0, ixz = args.size(); ix < ixz; ix++)

@@ -25,14 +25,14 @@ class DspUnset extends DspToken implements Output
 		super(eat, args);
 	} // DspUnset()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		if (args.size() != 1) throw new DspParseException(
 				"unset requires a variable reference", getTokenIndex(), comp);
 		DspArg arg0 = args.get(0);
 		if (arg0.getExpr() != null) throw new DspParseException(
 				"unset does not allow an expression", getTokenIndex(), comp);
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		buf2.append(arg0.getText());
 		buf2.append(" = null;");
 		DspCompile.doTabs(buf, level);

@@ -16,5 +16,5 @@ package com.dsp.servlet;
 
 interface Declaration extends Token
 {
-	void doMember(DspCompile comp, StringBuffer buf) throws DspParseException;
+	void doMember(DspCompile comp, StringBuilder buf) throws DspParseException;
 } // Declaration

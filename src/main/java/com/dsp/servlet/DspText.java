@@ -29,7 +29,7 @@ class DspText implements Output
 		this.text = text;
 	} // DspText()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
 		if (text != null && text.length() > 0)
 		{
@@ -113,7 +113,7 @@ class DspText implements Output
 
 	public static String enHtml(String text)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		char c = 0, last;
 		for (int ix = 0, iz = text.length(); ix < iz; ix++)
 		{
@@ -147,7 +147,7 @@ class DspText implements Output
 
 	public static String hex(int val, int digits)
 	{
-		StringBuffer buf = new StringBuffer(digits);
+		StringBuilder buf = new StringBuilder(digits);
 		while (digits-- > 0)
 		{
 			char d = (char)((val & 15) + '0');
@@ -160,7 +160,7 @@ class DspText implements Output
 
 	public static String octal(int val, int digits)
 	{
-		StringBuffer buf = new StringBuffer(digits);
+		StringBuilder buf = new StringBuilder(digits);
 		while (digits-- > 0)
 		{
 			char d = (char)((val & 7) + '0');

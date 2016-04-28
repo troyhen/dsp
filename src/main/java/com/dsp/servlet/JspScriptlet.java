@@ -23,7 +23,7 @@ class JspScriptlet extends JspToken implements Output
 		super(text);
 	} // JspScriptlet()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level)
+	public int doJava(DspCompile comp, StringBuilder buf, int level)
 	{
 		return level;
 	} // doJava()

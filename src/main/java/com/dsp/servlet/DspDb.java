@@ -25,9 +25,9 @@ class DspDb extends DspToken implements Output
 		super(eat, args);
 	} // DspDb()
 
-	public int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException
+	public int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException
 	{
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		DspCompile.doTabs(buf, level);
 		buf.append("open.setDatabase(");
 		boolean more = false;

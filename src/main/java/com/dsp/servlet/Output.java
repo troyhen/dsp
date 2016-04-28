@@ -16,5 +16,5 @@ package com.dsp.servlet;
 
 interface Output extends Token
 {
-	int doJava(DspCompile comp, StringBuffer buf, int level) throws DspParseException;
+	int doJava(DspCompile comp, StringBuilder buf, int level) throws DspParseException;
 } // Output

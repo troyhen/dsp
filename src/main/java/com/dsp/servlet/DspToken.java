@@ -53,7 +53,7 @@ abstract class DspToken implements Token
 	private static final int POSTTYPE = 4;
 	private static final int DONE = 5;
 
-	protected String doStatement(DspCompile comp, StringBuffer buf, int clip, String name)
+	protected String doStatement(DspCompile comp, StringBuilder buf, int clip, String name)
 			throws DspParseException
 	{
 		boolean comma = false;
@@ -280,7 +280,7 @@ abstract class DspToken implements Token
 	 */
 	private static String fixCalls(DspCompile comp, String expr, int level)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		int count = 0;
 		boolean literal = false, string = false, cstring = false;
 		char c = 0;
@@ -533,7 +533,7 @@ System.out.println("cast " + cast);
 
 	/** Fix a function call to use an Object array.
 	 */
-	private static int fixFunction(DspCompile comp, String expr, int level, StringBuffer buf,
+	private static int fixFunction(DspCompile comp, String expr, int level, StringBuilder buf,
 			int index)
 	{
 		int count = 0;
@@ -588,7 +588,7 @@ System.out.println("cast " + cast);
 	/** Fix the references to members of members of DspObjects
 	 *  in expressions to use getMember() or call().
 	 */
-	private static int fixMember(DspCompile comp, String expr, int level, StringBuffer buf,
+	private static int fixMember(DspCompile comp, String expr, int level, StringBuilder buf,
 			int start, int end)
 	{
 //System.out.println("fixMember(" + expr + ", " + start + ", " + end + ')');
@@ -665,7 +665,7 @@ System.out.println("cast " + cast);
 		final int GET  = 1;
 		final int SET  = 2;
 //		final int FUNC = 3;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		//int count = 0;
 //		boolean literal = false/*, string = false, cstring = false*/;
 		char c;
@@ -913,7 +913,7 @@ System.out.println("cast " + cast);
 	 */
 /*	private String fixSpecials(DspCompile comp, String expr, int level)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		int count = 0;
 		boolean literal = false, string = false;
 		char c;
@@ -976,7 +976,7 @@ System.out.println("cast " + cast);
 
 	protected String listArgs()
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if (args != null)
 		{
 			for (int ix = 0, iz = args.size(); ix < iz; ix++)
