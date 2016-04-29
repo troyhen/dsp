@@ -14,10 +14,10 @@
  */
 package com.dsp.servlet;
 
-import com.dsp.DspPage;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dsp.util.BZText.quotesScript;
 
 class TagAttr
 {
@@ -49,7 +49,7 @@ class TagAttr
 				if (text != null && text.length() > 0)
 				{
 					if (plus) buf.append(" + ");
-					buf.append(DspPage.quotesScript(text));
+					buf.append(quotesScript(text));
 					plus = true;
 				}
 				String expr = arg.getExpr();

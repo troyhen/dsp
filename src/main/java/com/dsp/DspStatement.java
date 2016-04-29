@@ -17,11 +17,17 @@ package com.dsp;
 import java.sql.*;	// Date, SQLException, Time
 import java.util.*;	// Hashtable, Vector
 
+import static com.dsp.DspNull.NULL;
+import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZCast._Integer;
+import static com.dsp.util.BZCast._String;
+import static com.dsp.util.BZTime._Date;
+import static com.dsp.util.BZTime._Time;
+
 abstract public class DspStatement implements DspObject
 {
 	public static final String	NAME = "row";
-	public static final int			DONE = Integer.MIN_VALUE;
-	public static final DspNull	NULL = new DspNull();
+	public static final int		DONE = Integer.MIN_VALUE;
 
 	protected boolean		debug, trace;
 	protected String		name;
@@ -108,7 +114,7 @@ abstract public class DspStatement implements DspObject
 		if (trace) ThreadState.logln("DspStatement.execute(" + obj + ")");
 		cache.clear();
 		if (debug) ThreadState.logln(name + " Executing: " + obj);
-		ThreadState.getOpen().setLastExecuted(statement = DspPage._String(obj));
+		ThreadState.getOpen().setLastExecuted(statement = _String(obj));
 		DspStatementLog.logStatement(name, statement);
 		try {
 			row = execute0(obj);
@@ -146,7 +152,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(index);
 			if (obj == null) return null;
-			return DspPage._Date(obj);
+			return _Date(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get date value of " + index, e);
 //		}
@@ -157,7 +163,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(name);
 			if (obj == null) return null;
-			return DspPage._Date(obj);
+			return _Date(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get date value of " + name, e);
 //		}
@@ -170,7 +176,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(index);
 			if (obj == null) return null;
-			return DspPage._Integer(obj);
+			return _Integer(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get integer value of " + index, e);
 //		}
@@ -181,7 +187,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(name);
 			if (obj == null) return null;
-			return DspPage._Integer(obj);
+			return _Integer(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get int value of " + name, e);
 //		}
@@ -296,7 +302,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(index);
 			if (obj == null) return null;
-			return DspPage._Time(obj);
+			return _Time(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get time value of " + index, e);
 //		}
@@ -307,7 +313,7 @@ abstract public class DspStatement implements DspObject
 //		try {
 			Object obj = getObject(name);
 			if (obj == null) return null;
-			return DspPage._Time(obj);
+			return _Time(obj);
 //		} catch (SQLException e) {
 //			throw new DspException("Couldn't get time value of " + name, e);
 //		}
@@ -383,9 +389,9 @@ abstract public class DspStatement implements DspObject
 			return;
 		}
 		else
-		if (name.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (name.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		else throw new DspReadOnlyException(NAME, variable);
 		if (debug) ThreadState.logln(name + '.' + variable + " <= " + value);
 	} // set()

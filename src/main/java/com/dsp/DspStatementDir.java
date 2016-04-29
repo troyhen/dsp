@@ -17,6 +17,8 @@ package com.dsp;
 import java.io.File;
 import java.util.*;	// Vector
 
+import static com.dsp.util.BZCast._String;
+
 class DspStatementDir extends DspStatement
 {
 	static final String NAME = "dir";
@@ -213,7 +215,7 @@ class DspStatementDir extends DspStatement
 	{
 		if (trace) ThreadState.logln("DspStatementDir.stripDir(" + obj + ')');
 		if (obj == null) return null;
-		String path = DspPage._String(obj).trim();
+		String path = _String(obj).trim();
 //		if (!path.toLowerCase().startsWith("dir")) return null;
 		path = path.trim();
 		int ix = path.indexOf(',');

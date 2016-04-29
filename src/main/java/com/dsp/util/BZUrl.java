@@ -17,7 +17,7 @@ package com.dsp.util;
 import java.io.*;    		// input and output from and to url or page
 import java.net.*;   		// URL for http and https and ftp
 
-import com.dsp.DspPage;
+import static com.dsp.util.BZText.base64Encode;
 
 /**
 * This class provides support for talking to a url through various
@@ -217,7 +217,7 @@ public class BZUrl
 		if (trace) log.println("BZUrl.setBasicAuth()");
 		String uidPwd = uid + ':' + pwd;
 //		String authStr = "BASIC " + new sun.misc.BASE64Encoder().encode(uidPwd.getBytes());
-		String authStr = "BASIC " + DspPage.base64Encode(uidPwd);
+		String authStr = "BASIC " + base64Encode(uidPwd);
 		connection.setRequestProperty("Authorization", authStr);
 		if (debug) log.println("url.setBasicAuth() -> " + authStr);
 	} // setBasicAuth()

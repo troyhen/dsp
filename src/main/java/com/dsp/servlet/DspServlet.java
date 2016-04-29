@@ -18,12 +18,11 @@ import com.dsp.DspConnect;
 import com.dsp.DebugLog;
 import com.dsp.DspException;
 import com.dsp.DspFactory;
+import com.dsp.DspNull;
 import com.dsp.DspObject;
-import com.dsp.DspPage;
 import com.dsp.DspPageContext;
 import com.dsp.DspReadOnlyException;
 import com.dsp.ThreadState;
-import com.dsp.DspStatement;
 import com.dsp.DspStatementLog;
 import com.dsp.TargetWriter;
 
@@ -35,6 +34,9 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;	// HttpJspPage, JspWriter
+
+import static com.dsp.util.BZText.normalizePath;
+import static com.dsp.util.BZCast._boolean;
 
 public class DspServlet extends HttpServlet implements DspObject
 {
@@ -220,7 +222,7 @@ public class DspServlet extends HttpServlet implements DspObject
 		}
 		if (result == null) result = defValue;
 		if (debug) ThreadState.logln(NAME + '.' + variable + " => " + result);
-		if (result == DspStatement.NULL) result = null;
+		if (result == DspNull.NULL) result = null;
 		return result;
 	} // get()
 
@@ -477,8 +479,8 @@ System.out.println("getResource 5");
 		if (pathInfo == null || pathInfo.length() == 0) virtualPath = servletPath;
 		else virtualPath = pathInfo;
 		boolean rootPath = virtualPath.startsWith("//");
-		if (rootPath) virtualPath = '/' + DspPage.normalizePath(virtualPath.substring(1));
-		else virtualPath = DspPage.normalizePath(virtualPath);
+		if (rootPath) virtualPath = '/' + normalizePath(virtualPath.substring(1));
+		else virtualPath = normalizePath(virtualPath);
 		return virtualPath;
 	} // getVirtualPath()
 
@@ -678,9 +680,9 @@ System.out.println("getResource 5");
         if (config == null) throw new NullPointerException("config is null when it shouldn't be.");
 		if (value == null) unset(variable);
 		else
-		if (variable.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (variable.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		getServletContext().setAttribute(PREFIX + variable, value);
 		if (debug) ThreadState.logln(NAME + '.' + variable + " <= " + value);
 	} // set()
@@ -692,7 +694,7 @@ System.out.println("getResource 5");
 		if (variable.equals(DEBUG)) debug = false;
 		else
 		if (variable.equals(TRACE)) trace = false;
-		getServletContext().setAttribute(PREFIX + variable, DspStatement.NULL);
+		getServletContext().setAttribute(PREFIX + variable, DspNull.NULL);
 		if (debug) ThreadState.logln("unset " + NAME + '.' + variable);
 	} // unset()
 

@@ -17,6 +17,10 @@ package com.dsp;
 import java.util.*;	// Hashtable, Vector
 import javax.servlet.http.*;
 
+import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZCast._int;
+import static com.dsp.util.BZCast._String;
+
 /**
  * <p>This is the cookie manager class.  All cookies for a request and response are handled
  * by this class.  On a DSP page this is the type for the implicit <b>cookie</b> object.
@@ -164,15 +168,15 @@ public class DspCookies implements DspObject
 			return;
 		}
 		if (name.equalsIgnoreCase(TRACE)) {
-			trace = DspPage._boolean(value);
+			trace = _boolean(value);
 		} else if (name.equalsIgnoreCase(DEBUG)) {
-			debug = DspPage._boolean(value);
+			debug = _boolean(value);
 		} else if (name.equalsIgnoreCase(MAX_AGE)) {
-			maxAge = DspPage._int(value);
+			maxAge = _int(value);
 		} else if (name.equalsIgnoreCase(DOMAIN)) {
-			domain = DspPage._String(value);
+			domain = _String(value);
 		} else if (name.equalsIgnoreCase(PATH)) {
-			path = DspPage._String(value);
+			path = _String(value);
 		} else {
 			Cookie cookie = findCookie(name);
 			if (cookie == null)

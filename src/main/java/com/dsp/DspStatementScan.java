@@ -16,6 +16,8 @@ package com.dsp;
 
 import java.util.*;	// Hashtable, Vector
 
+import static com.dsp.util.BZCast._String;
+
 public class DspStatementScan extends DspStatement
 {
 	public static final String COLUMN = "word";
@@ -108,7 +110,7 @@ public class DspStatementScan extends DspStatement
 	private StringTokenizer parse(Object obj)
 	{
 		if (trace) ThreadState.logln("DspStatementScan.stripScan(" + obj + ')');
-		String data = DspPage._String(obj);
+		String data = _String(obj);
 		if (data.length() == 0) return null;
 		int ix = 0, end = data.length();
 		char c = 0;

@@ -17,6 +17,8 @@ package com.dsp;
 import java.sql.SQLException;
 import java.util.*;					// Hashtable, Stack, Vector
 
+import static com.dsp.util.BZCast._boolean;
+
 /**
  * <p>Manager of all open statements.  Each statament that opens multiple rows is stored
  * as in a stack arrangement, with the most recently added being the first found.  Statements
@@ -304,9 +306,9 @@ public class DspOpen implements DspObject
 			return;
 		}
 		else
-		if (variable.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (variable.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		else throw new DspReadOnlyException(NAME, variable);
 		if (debug) ThreadState.logln(NAME + '.' + variable + " <= " + value);
 	} // set()

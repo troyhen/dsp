@@ -16,6 +16,8 @@ package com.dsp;
 
 import java.sql.*;	// DriverManager, Connection, ...
 
+import static com.dsp.util.BZCast._String;
+
 public class DspStatementSql extends DspStatement
 {
 	public static final String NAME = "sql";
@@ -274,7 +276,7 @@ public class DspStatementSql extends DspStatement
 	{
 		if (trace) ThreadState.logln("DspStatementSql.stripDB(" + obj + ')');
 		if (obj == null) return null;
-		String sql = DspPage._String(obj).trim();
+		String sql = _String(obj).trim();
 		String dbName = null;
 		if (sql.length() > 4 && sql.toLowerCase().startsWith("db") && sql.charAt(2) <= ' ')
 		{

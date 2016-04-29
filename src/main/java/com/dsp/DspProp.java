@@ -28,6 +28,11 @@ import javax.servlet.http.*;	// HttpServletRequest, HttpServletResponse
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 
+import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZCast._String;
+import static com.dsp.util.BZText.base64Decode;
+import static com.dsp.util.BZText.normalizePath;
+
 public class DspProp implements DspObject
 {
 	public static final String NAME = "prop";
@@ -168,7 +173,7 @@ public class DspProp implements DspObject
 					if (auth != null && auth.toLowerCase().startsWith("basic "))
 					{
 							// Decode the authoization string
-						auth = DspPage.base64Decode(auth.substring(6));
+						auth = base64Decode(auth.substring(6));
 							// Colon delimits the user name from the password
 						int ix = auth.indexOf(':');
 						// If not colon then something's wrong
@@ -204,7 +209,7 @@ public class DspProp implements DspObject
 			{
 				if (authMethod == AUTH_BASIC)
 				{
-					String realm = DspPage._String(get("authorize.realm"));
+					String realm = _String(get("authorize.realm"));
 					if (realm == null)
 					{
 						realm = url.getFile();
@@ -536,7 +541,7 @@ System.err.println("Prop File URL: " + url);
 				try {
 					if (url.getFile().length() > 1)
 					{
-						URL parentUrl = new URL(DspPage.normalizePath(url.toString() + "/../"));
+						URL parentUrl = new URL(normalizePath(url.toString() + "/../"));
 //System.out.println("loading parent " + parentUrl);
 						parent = DspFactory.getDefaultFactory().getProp(parentUrl);
 						parent.load();
@@ -696,9 +701,9 @@ System.err.println("Prop File URL: " + url);
 			return;
 		}
 		else
-		if (variable.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (variable.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		props.put(variable, value);
 		if (debug) ThreadState.logln(NAME + '.' + variable + " <= " + value);
 	} // set()

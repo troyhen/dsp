@@ -15,6 +15,7 @@
 package com.dsp;
 
 import com.dsp.servlet.DspServlet;
+import com.dsp.util.BZText;
 
 import java.io.*;	// IOException, PrintStream
 import java.net.URL;
@@ -27,6 +28,9 @@ import javax.servlet.http.*;// HttpSession
 import javax.servlet.jsp.*;	// JspWriter, PageContext
 import javax.servlet.jsp.el.*;	// JSP 2.x APR
 import javax.servlet.jsp.tagext.*;	// BodyContent
+
+import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZText.replace;
 
 public class DspPageContext extends PageContext implements DspObject
 {
@@ -469,7 +473,7 @@ public class DspPageContext extends PageContext implements DspObject
 			if (debug) ThreadState.logln("dir = " + dir);
 			File to = new File(dir, path);
 			if (debug) ThreadState.logln("to = " + to);
-			path = DspPage.replace(to.getPath(), File.separator, "/");
+			path = replace(to.getPath(), File.separator, "/");
 			if (path.charAt(0) != '/') path = '/' + path;
 			if (request.getAttribute(ROOT) != null) {
 				path = '/' + path;
@@ -477,8 +481,8 @@ public class DspPageContext extends PageContext implements DspObject
 			}
 			if (debug) ThreadState.logln("deltaPath = " + path);
     }
-    if (rootPath) path = '/' + DspPage.normalizePath(path.substring(1));
-		else path = DspPage.normalizePath(path);
+    if (rootPath) path = '/' + BZText.normalizePath(path.substring(1));
+		else path = BZText.normalizePath(path);
 		if (debug) ThreadState.logln("normalized " + path);
 		return path;
 	} // normalizePath()
@@ -602,9 +606,9 @@ public class DspPageContext extends PageContext implements DspObject
 		if (trace) ThreadState.logln("DspPageContext.setAttribute(" + name + ", " + value + ')');
 		if (name == null) throw new NullPointerException("Attribute name is null");
 		if (value == null) throw new NullPointerException("Attribute value is null");
-		if (name.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (name.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		else vars.put(name, value);
 		if (debug) ThreadState.logln(NAME + '.' + name + " <= " + value);
 	} // setAttribute()

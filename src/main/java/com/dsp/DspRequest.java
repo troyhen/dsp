@@ -18,6 +18,8 @@ import java.util.*;	// ArrayList, Hashtable, Vector
 
 import javax.servlet.http.*;
 
+import static com.dsp.util.BZCast._boolean;
+
 public class DspRequest implements DspObject
 {
 	public static final String NAME = "var";
@@ -161,13 +163,12 @@ System.out.println("c " + val.length() + ": " + val);
 		if (result == null) result = req.getHeader(name);
 		if (result == null) result = defaultValue;
 		if (debug) ThreadState.logln(NAME + '.' + name +" => " + result);
-		if (result == DspStatement.NULL) result = null;
+		if (result == DspNull.NULL) result = null;
 		return result;
 	} // get()
 
 	public HttpServletRequest getRequest() { return req; }
 
-	@SuppressWarnings("unchecked")
 	public Iterator<String> names()
 	{
 		ArrayList<String> list = new ArrayList<String>();
@@ -177,7 +178,7 @@ System.out.println("c " + val.length() + ": " + val);
             while (it.hasMoreElements())
             {
                 String name = it.nextElement();
-                if (name.startsWith(PREFIX) && req.getAttribute(name) != DspStatement.NULL)
+                if (name.startsWith(PREFIX) && req.getAttribute(name) != DspNull.NULL)
                 {
                     list.add(name.substring(PREFIX.length()));
                 }
@@ -213,9 +214,9 @@ System.out.println("c " + val.length() + ": " + val);
 			return;
 		}
 		else
-		if (name.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (name.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		req.setAttribute(PREFIX + name, value);
 		if (debug) ThreadState.logln(NAME + '.' + name +" <= " + value);
 	} // set()
@@ -228,7 +229,6 @@ System.out.println("c " + val.length() + ": " + val);
 		DspProp group = ThreadState.getProp();
 		group.preSet(this, NAME);
 			// Move all of the parameters to attributes so they won't get lost in calls and forwards
-		@SuppressWarnings("unchecked")
 		Enumeration<String> en = req.getParameterNames();
 		while (en.hasMoreElements())
 		{
@@ -239,7 +239,7 @@ System.out.println("c " + val.length() + ": " + val);
 				String[] list = req.getParameterValues(name);
 				Object value;
 				int len = list != null ? list.length : 0;
-				if (len == 0) value = DspStatement.NULL;	// parameter with no value
+				if (len == 0) value = DspNull.NULL;	// parameter with no value
 				else
 				if (len == 1)	value = decode(list[0]);		// single value, no array used
 				else
@@ -264,7 +264,7 @@ System.out.println("c " + val.length() + ": " + val);
 		if (name.equals(DEBUG)) try { debug = false; } catch (NumberFormatException e) {}
 		else
 		if (name.equals(TRACE)) try { trace = false; } catch (NumberFormatException e) {}
-		else req.setAttribute(PREFIX + name, DspStatement.NULL);
+		else req.setAttribute(PREFIX + name, DspNull.NULL);
 		if (debug) ThreadState.logln("unset " + NAME + '.' + name);
 	} // unset()
 

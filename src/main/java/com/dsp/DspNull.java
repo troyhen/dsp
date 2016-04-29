@@ -14,8 +14,14 @@
  */
 package com.dsp;
 
-class DspNull
+public class DspNull
 {
+	public static final DspNull NULL = new DspNull();
+	
+	private DspNull() {}
+	
+	public static DspNull getInstance() { return NULL; }
+	
 	public String toString() { return "Null"; }
 } // DspNull
 

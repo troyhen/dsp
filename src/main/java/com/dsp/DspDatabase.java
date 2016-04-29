@@ -19,6 +19,10 @@ import com.dsp.servlet.DspServlet;
 import java.sql.SQLException;
 import java.util.*;	// Hashtable, Properties
 
+import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZCast._int;
+import static com.dsp.util.BZCast._String;
+
 public class DspDatabase implements Database
 {
 	static final String DEF_USERNAME	= "";
@@ -43,7 +47,7 @@ public class DspDatabase implements Database
 	DspDatabase(String name, DspProp prop, DspServlet servlet) throws DspException
 	{
 		try {	// init timeout from servlet params
-			timeout = DspPage._int(servlet.get(INIT_TIMEOUT));
+			timeout = _int(servlet.get(INIT_TIMEOUT));
 		} catch (Exception e) {
 			timeout = 0;
 		}
@@ -234,36 +238,36 @@ public class DspDatabase implements Database
 		else
 		if (variable.equals(GET_USERNAME))
 		{
-			username = DspPage._String(value);
+			username = _String(value);
 			if (built > 0) reconnect();
 		}
 		else
 		if (variable.equals(GET_PASSWORD))
 		{
-			password = DspPage._String(value);
+			password = _String(value);
 			if (built > 0) reconnect();
 		}
 		else
 		if (variable.equals(GET_DRIVER))
 		{
-			driver = DspPage._String(value);
+			driver = _String(value);
 			if (built > 0) reconnect();
 		}
 		else
 		if (variable.equals(GET_DATABASE))
 		{
-			database = DspPage._String(value);
+			database = _String(value);
 			if (built > 0) reconnect();
 		}
 		else
 		if (variable.equals(GET_TIMEOUT))
 		{
-			timeout = DspPage._int(value);
+			timeout = _int(value);
 		}
 		else
-		if (variable.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
 		else
-		if (variable.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
 		else throw new DspReadOnlyException(this.name, variable);
 		if (debug) ThreadState.logln(this.name + '.' + variable + " <= " + value);
 	} // set()

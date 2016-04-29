@@ -18,6 +18,8 @@ import java.util.*;	// Enumeration, Hashtable, Vector
 
 import javax.servlet.http.*;
 
+import static com.dsp.util.BZCast._boolean;
+
 public class DspUser implements DspObject//, HttpSession
 {
 	public static final String NAME = "user";
@@ -36,15 +38,15 @@ public class DspUser implements DspObject//, HttpSession
 			DspProp group = ThreadState.getProp();
 			group.preSet(this, NAME);
 //			try {
-//				try { debug = DspPage._boolean(group.getParam(NAME + ".debug")); } catch (NumberFormatException e) {}
-//				try { trace = DspPage._boolean(group.getParam(NAME + ".trace")); } catch (NumberFormatException e) {}
+//				debug = DspPage._boolean(group.getParam(NAME + ".debug"));
+//				trace = DspPage._boolean(group.getParam(NAME + ".trace"));
 //			} catch (DspException e) {
 //			}
 		}
 		else
 		{
-			try { debug = DspPage._boolean(session.getAttribute(DEBUG)); } catch (NumberFormatException e) {}
-			try { trace = DspPage._boolean(session.getAttribute(TRACE)); } catch (NumberFormatException e) {}
+			debug = _boolean(session.getAttribute(DEBUG));
+			trace = _boolean(session.getAttribute(TRACE));
 		}
 		if (trace) ThreadState.logln("DspUser(" + session + ")");
 		if (debug)
@@ -84,7 +86,7 @@ public class DspUser implements DspObject//, HttpSession
 		Object result = session.getAttribute(name);
 		if (result == null) result = defaultValue;
 		if (debug) ThreadState.logln(NAME + '.' + name + " => " + result);
-		if (result == DspStatement.NULL) result = null;
+		if (result == DspNull.NULL) result = null;
 		return result;
 	} // get()
 
@@ -107,7 +109,6 @@ public class DspUser implements DspObject//, HttpSession
 	public Iterator<String> names()
 	{
 		ArrayList<String> list = new ArrayList<String>();
-		@SuppressWarnings("unchecked")
 		Enumeration<String> it = session.getAttributeNames();
 		while (it.hasMoreElements())
 		{
@@ -140,9 +141,9 @@ public class DspUser implements DspObject//, HttpSession
 			return;
 		}
 		else
-		if (name.equals(DEBUG)) try { debug = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (name.equals(TRACE)) try { trace = DspPage._boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) trace = _boolean(value);
 		session.setAttribute(name, value);
 		if (debug) ThreadState.logln(NAME + '.' + name + " <= " + value);
 	} // set()

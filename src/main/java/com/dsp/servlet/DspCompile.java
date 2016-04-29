@@ -39,6 +39,9 @@ import javax.tools.ToolProvider;
 
 //import sun.tools.javac.*;
 
+import static com.dsp.util.BZText.fromUrl;
+import static com.dsp.util.BZText.replace;
+
 class DspCompile
 {
 	static final boolean			DEBUG = false;
@@ -77,7 +80,7 @@ class DspCompile
 		if (ix >= 0)
 		{
 			fileName = fullPath.substring(ix + 1);
-			fullPath = DspPage.replace(fullPath.substring(0, ix).toLowerCase(), ":", "_");
+			fullPath = replace(fullPath.substring(0, ix).toLowerCase(), ":", "_");
 		}
 		else
 		{
@@ -208,7 +211,7 @@ class DspCompile
 		for (URL url : urls) {
 			if ("file".equalsIgnoreCase(url.getProtocol())) {
 				if (buf.length() > 0) buf.append(sep);
-				buf.append(DspPage.fromUrl(url.getPath()));
+				buf.append(fromUrl(url.getPath()));
 			}
 		}
 //		urls = ((URLClassLoader) HttpServlet.class.getClassLoader()).getURLs();
@@ -222,7 +225,7 @@ class DspCompile
 		for (URL url : urls) {
 			if ("file".equalsIgnoreCase(url.getProtocol())) {
 				if (buf.length() > 0) buf.append(sep);
-				buf.append(DspPage.fromUrl(url.getPath()));
+				buf.append(fromUrl(url.getPath()));
 			}
 		}
 		return buf.toString();
