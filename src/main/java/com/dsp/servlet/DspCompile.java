@@ -24,6 +24,7 @@ import com.dsp.DspProp;
 import com.dsp.DspRequest;
 import com.dsp.DspStatement;
 import com.dsp.DspUser;
+import com.dsp.ThreadState;
 
 import java.io.*;			// IOException, FileNotFoundException
 import java.net.*;			// URL, URLConnection
@@ -33,8 +34,10 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.HttpJspPage;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 
-import sun.tools.javac.*;
+//import sun.tools.javac.*;
 
 class DspCompile
 {
@@ -60,6 +63,7 @@ class DspCompile
 	private ArrayList<DspCompile>	inserts;
 	private DspParse				parse;
 	private String					isErrorPage;
+	private JavaCompiler			compiler;
 
 	DspCompile(DspServlet servlet, HttpServletRequest req, URL url,
 			boolean flush) throws IOException, DspException
@@ -101,7 +105,7 @@ class DspCompile
 	/** Add a name from the specials list.  This list specifies which objects are of type
 	 * DspObject and need special treatment when parsing and converting to java.  User's
 	 * can create dynamic objects using the #name syntax in any statement.  These objects
-	 * are only in scope until the {else} or {end} for the declarinig statement.
+	 * are only in scope until the {else} or {end} for the declaring statement.
 	 * @see addSpecial(String)
 	 */
 	void addSpecial(String name, int index) throws DspParseException
@@ -113,25 +117,40 @@ class DspCompile
 		specials.add(name);
 	} // addSpecial()
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	private boolean buildClass() throws DspException, IOException, NoClassDefFoundError
 	{
 		if (DEBUG) System.out.println("DSP Compiling " + classFile);
-		String as[];
-		as = new String[5];
-		int ix = 0;
-		as[ix++] = "-classpath";
-		as[ix++] = classPath();
-		if (DEBUG) System.out.println("DSP Compiler classpath: " + as[ix - 1]);
-//System.out.println("DSP System classpath: " + System.getProperty("java.class.path"));
-		as[ix++] = "-d";
-		as[ix++] = classRoot;
-		as[ix++] = javaFile.getAbsolutePath();	//path + '/' + javaFile.getName();
+		loadJavaCompiler();
+		if (compiler == null) {
+			ThreadState.logln("DspCompile: No Java Compiler Installed");
+			System.out.println("DspCompile: No Java Compiler Installed");
+			return false;
+		}
 		errors = new ByteArrayOutputStream();
-		Main main = null;
+		new File(classFile.getParent()).mkdirs();
+		String[] args = new String[] {
+			"-cp", classPath(),
+			"-d", classRoot,
+			javaFile.getAbsolutePath()
+		};
+		int result = compiler.run(System.in, System.out, System.err, args);
+		return result == 0;
+//		String as[];
+//		as = new String[5];
+//		int ix = 0;
+//		as[ix++] = "-classpath";
+//		as[ix++] = classPath();
+//		if (DEBUG) System.out.println("DSP Compiler classpath: " + as[ix - 1]);
+////System.out.println("DSP System classpath: " + System.getProperty("java.class.path"));
+//		as[ix++] = "-d";
+//		as[ix++] = classRoot;
+//		as[ix++] = javaFile.getAbsolutePath();	//path + '/' + javaFile.getName();
+//		errors = new ByteArrayOutputStream();
+//		Main main = null;
 //		try
 //		{
-			main = new Main(errors, "DSP Compiler");
+//			main = new Main(errors, "DSP Compiler");
 /*		}
 		catch(NoClassDefFoundError e)
 		{
@@ -146,19 +165,19 @@ class DspCompile
 			servletoutputstream1.println("</body></html>");
 			return false;
 		}*/
-		new File(classFile.getParent()).mkdirs();
-		if (!main.compile(as))
-		{
+//		new File(classFile.getParent()).mkdirs();
+//		if (!main.compile(as))
+//		{
 //			ServletOutputStream servletoutputstream = httpservletresponse.getOutputStream();
 //			servletoutputstream.println("<html><head><title>Error compiling page</title></head>");
 //			servletoutputstream.println("<body><h1>Error compiling page</h1><pre>");
 //			servletoutputstream.println(out.toString());
 //			servletoutputstream.println("</pre></body></html>");
-			return false;
-		}
+//			return false;
+//		}
 //		if(out.size() > 0)
 //			System.out.print(out.toString());
-		return true;
+//		return true;
 	} // buildClass()
 
 	private void buildJava(HttpServletRequest req) throws IOException, DspException
@@ -751,6 +770,32 @@ class DspCompile
 		}
 		return buf;
 	} // loadFile()
+
+	private void loadJavaCompiler()
+	{
+		if (compiler == null) {
+			compiler = ToolProvider.getSystemJavaCompiler();
+		}
+		if (compiler == null) {
+			try {
+				String javaHome = System.getProperty("java.home");
+				ThreadState.logln("javaHome " + javaHome);
+				File file = new File(javaHome);
+				URL jhUrl = file.toURI().toURL();
+				ThreadState.logln("jhUrl " + jhUrl);
+				URL toolsUrl1 = new URL(jhUrl, "libs/tools.jar");
+				URL toolsUrl2 = new URL(jhUrl, "../libs/tools.jar");
+				ThreadState.logln("toolsUrl1 " + toolsUrl1);
+				ThreadState.logln("toolsUrl2 " + toolsUrl2);
+				@SuppressWarnings("resource")
+				ClassLoader loader = new URLClassLoader(new URL[] {toolsUrl1, toolsUrl2});
+				compiler = (JavaCompiler) loader.loadClass("com.sun.tools.javac.api.JavacTool").newInstance();
+			} catch (MalformedURLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				ThreadState.logln(e);
+				e.printStackTrace();
+			}
+		}
+	}
 
 //	int nextTemp() { return tempCount++; }
 

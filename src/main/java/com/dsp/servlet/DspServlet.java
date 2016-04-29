@@ -115,14 +115,14 @@ public class DspServlet extends HttpServlet implements DspObject
 			log.print("Error Compiling ");
 			log.println(virtualPath);
 			log.print(e.getMessage());
-getServletContext().log("Compile exception", e);
+//getServletContext().log("Compile exception", e);
 		} catch (DspParseException e) {
 			req.setAttribute(DspPageContext.THROWN, e);
 			DebugLog log = ThreadState.getLog();
 			log.print("Error Parsing ");
 			log.println(virtualPath);
 			log.print(e.getMessage());
-getServletContext().log("Parse exception", e);
+//getServletContext().log("Parse exception", e);
 		} catch (FileNotFoundException e) {
 			req.setAttribute(DspPageContext.THROWN, e);
 			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -317,7 +317,7 @@ getServletContext().log("Parse exception", e);
 		} catch (IOException e) {
 			ThreadState.logln(e);
 		}
-//System.out.println("getRealPath(" + path + ") -> " + result);
+		if (debug) ThreadState.logln("DspServlet.getRealPath(" + path + ") -> " + result);
 		return result;
 	} // getRealPath()
 
@@ -356,10 +356,14 @@ System.out.println("jndi2file -> " + url);
 	@SuppressWarnings("deprecation")
 	public URL getResource(HttpServletRequest req, String path)
 	{
+		if (trace) ThreadState.logln("DspServlet.getResource(" + path + ")");
         if (config == null) throw new NullPointerException("config is null when it shouldn't be.");
 		URL result = null;
 		try {
-			result = new File(getRealPath(req, path)).toURL();
+			String realPath = getRealPath(req, path);
+			if (realPath != null) {
+				result = new File(realPath).toURL();
+			}
 		} catch (MalformedURLException e) {
 			ThreadState.logln(e);
 		}
@@ -425,8 +429,10 @@ System.out.println("getResource 5");
 			ThreadState.logln(e);
 		}
 */
-//ThreadState.logln("getResource(" + path + ") -> " + result);
-//System.out.println("getResource(" + path + ") -> " + result);
+		if (debug) {
+			ThreadState.logln("getResource(" + path + ") -> " + result);
+			System.out.println("DspServlet.getResource(" + path + ") -> " + result);
+		}
 		return result;
 	} // getResource()
 
@@ -533,7 +539,6 @@ System.out.println("getResource 5");
 		}
 	} // initConfig()
 
-	@SuppressWarnings("unchecked")
 	public Iterator<String> names()
 	{
         if (config == null) throw new NullPointerException("config is null when it shouldn't be.");

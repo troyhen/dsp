@@ -48,8 +48,8 @@ public class DspProp implements DspObject
 	private static final int AUTH_COOKIE	= 1;
 	private static final int AUTH_SESSION	= 2;
 
-	private DspServlet servlet;
-	private DspProp	parent;	// used when this folder has no properties file
+	private DspServlet	servlet;
+	private DspProp		parent;	// used when this folder has no properties file
 	private Database	firstDB;
 	private boolean		debug = false, trace = false, checkAuth = false;
 
@@ -60,7 +60,7 @@ public class DspProp implements DspObject
 	private long		timestamp;
 	private String		authPage;
 	private int			authMethod;
-	private ProxLoader loader;
+	private ProxLoader	loader;
 
 	public DspProp(URL url, DspServlet servlet) throws IOException
 	{
@@ -68,7 +68,9 @@ public class DspProp implements DspObject
 		this.url = url;
 		propsUrl = new URL(url, PROPERTY_FILE);
 		load();
-		loader = new ProxLoader(getFile());
+		if (Mode.CONTEXT_LOADER) {
+			loader = new ProxLoader(getFile());
+		}
 		if (trace) ThreadState.logln("DspProp(" + url + ')');
 	} // DspProp()
 
@@ -325,7 +327,7 @@ public class DspProp implements DspObject
 		{
 			return file = new File(url.getFile());
 		}
-/*		if (url.getProtocol().equals("jndi")) {
+		if (url.getProtocol().equals("jndi")) {
 			String uri = url.toString();
 			int s2 = uri.indexOf("/", 6);
 			String host;
@@ -336,7 +338,7 @@ public class DspProp implements DspObject
 			}
 			String domainPath = servlet.getDomainPath(host);
 			if (domainPath != null) return new File(domainPath);
-		} */
+		}
 		throw new IllegalStateException("prop URL is an unknown protocol; " + url);
 	} // getFile()
 

@@ -21,11 +21,11 @@ import java.net.URL;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;					// Hashtable, Stack, Vector
 
+import javax.el.ELContext;
 import javax.servlet.*;			// Servlet, ServletRequest, ServletResponse
 import javax.servlet.http.*;// HttpSession
 import javax.servlet.jsp.*;	// JspWriter, PageContext
-import javax.servlet.jsp.el.ExpressionEvaluator;
-import javax.servlet.jsp.el.VariableResolver;
+import javax.servlet.jsp.el.*;	// JSP 2.x APR
 import javax.servlet.jsp.tagext.*;	// BodyContent
 
 public class DspPageContext extends PageContext implements DspObject
@@ -225,7 +225,7 @@ public class DspPageContext extends PageContext implements DspObject
 		return -1;
 	} // getAttributesScope()
 
-	public Enumeration<?> getAttributeNamesInScope(int scope)
+	public Enumeration<String> getAttributeNamesInScope(int scope)
 	{
 		return null;
 	} // getAttributeNamesInScope()
@@ -664,14 +664,22 @@ public class DspPageContext extends PageContext implements DspObject
 		removeAttribute(variable);
 	} // unset()
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ExpressionEvaluator getExpressionEvaluator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public VariableResolver getVariableResolver() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ELContext getELContext() {
 		// TODO Auto-generated method stub
 		return null;
 	}
