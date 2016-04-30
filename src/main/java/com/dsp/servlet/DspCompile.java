@@ -137,7 +137,7 @@ class DspCompile
 			"-d", classRoot,
 			javaFile.getAbsolutePath()
 		};
-		int result = compiler.run(System.in, System.out, System.err, args);
+		int result = compiler.run(null, ThreadState.getLog(), ThreadState.getLog(), args);
 		return result == 0;
 //		String as[];
 //		as = new String[5];
