@@ -174,21 +174,20 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	 */
 	public static Object getMember(Object obj, String member) throws DspException
 	{
+		if (obj instanceof DspObject) {
+			return ((DspObject) obj).get(member);
+		}
+		Class<?> c = obj.getClass();
 		try {
-			return ((DspObject)obj).get(member);
-		} catch (ClassCastException e) {
-			Class<?> c = obj.getClass();
-			try {
-				Field f = c.getField(member);
-	//			if (Modifier.isPublic(f.getModifiers())
-	//			{
-					return f.get(obj);
-	//			}
-			} catch (NoSuchFieldException e1) {
-				throw new DspException("Could not find field '" + member + '\'', e1);
-			} catch (IllegalAccessException e1) {
-				throw new DspException("Could not access field '" + member + '\'', e1);
-			}
+			Field f = c.getField(member);
+//			if (Modifier.isPublic(f.getModifiers())
+//			{
+				return f.get(obj);
+//			}
+		} catch (NoSuchFieldException e1) {
+			throw new DspException("Could not find field '" + member + '\'', e1);
+		} catch (IllegalAccessException e1) {
+			throw new DspException("Could not access field '" + member + '\'', e1);
 		}
 	} // getMember()
 
@@ -305,8 +304,8 @@ public abstract class DspPage extends HttpServlet implements HttpJspPage
 	{
 		DspStatement state;
 		boolean debug = false, trace = false;
-		try { debug = _boolean(ThreadState.getOpen().get(DspObject.DEBUG)); } catch (NumberFormatException e) {}
-		try { trace = _boolean(ThreadState.getOpen().get(DspObject.TRACE)); } catch (NumberFormatException e) {}
+		debug = _boolean(ThreadState.getOpen().get(DspObject.DEBUG));
+		trace = _boolean(ThreadState.getOpen().get(DspObject.TRACE));
 		switch (type)
 		{
 			case ARRAY_STMT:

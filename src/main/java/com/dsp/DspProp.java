@@ -701,9 +701,9 @@ System.err.println("Prop File URL: " + url);
 			return;
 		}
 		else
-		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) trace = _boolean(value);
 		props.put(variable, value);
 		if (debug) ThreadState.logln(NAME + '.' + variable + " <= " + value);
 	} // set()

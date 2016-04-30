@@ -37,6 +37,7 @@ import javax.servlet.jsp.*;	// HttpJspPage, JspWriter
 
 import static com.dsp.util.BZText.normalizePath;
 import static com.dsp.util.BZCast._boolean;
+import static com.dsp.util.BZCast._int;
 
 public class DspServlet extends HttpServlet implements DspObject
 {
@@ -500,7 +501,7 @@ System.out.println("getResource 5");
 		if (config.getInitParameter(FLUSH_PAGES) != null) flushPages = true;
 		if (config.getInitParameter(LOG_THRESHOLD) != null) {
 			try {
-				int logThresh = Integer.parseInt(config.getInitParameter(LOG_THRESHOLD));
+				int logThresh = _int(config.getInitParameter(LOG_THRESHOLD));
 				DspStatementLog.setLogThreshold(logThresh);
 			} catch (NumberFormatException e) {
 				// Oh well
@@ -508,7 +509,7 @@ System.out.println("getResource 5");
 		}
 		if (config.getInitParameter(KILL_TIMEOUT) != null) {
 			try {
-				int killTimeout = Integer.parseInt(config.getInitParameter(KILL_TIMEOUT));
+				int killTimeout = _int(config.getInitParameter(KILL_TIMEOUT));
 				DspStatementLog.setKillTimeout(killTimeout);
 			} catch (NumberFormatException e) {
 				// Oh well
@@ -680,9 +681,9 @@ System.out.println("getResource 5");
         if (config == null) throw new NullPointerException("config is null when it shouldn't be.");
 		if (value == null) unset(variable);
 		else
-		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) trace = _boolean(value);
 		getServletContext().setAttribute(PREFIX + variable, value);
 		if (debug) ThreadState.logln(NAME + '.' + variable + " <= " + value);
 	} // set()

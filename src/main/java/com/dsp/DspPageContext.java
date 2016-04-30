@@ -606,9 +606,9 @@ public class DspPageContext extends PageContext implements DspObject
 		if (trace) ThreadState.logln("DspPageContext.setAttribute(" + name + ", " + value + ')');
 		if (name == null) throw new NullPointerException("Attribute name is null");
 		if (value == null) throw new NullPointerException("Attribute value is null");
-		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) trace = _boolean(value);
 		else vars.put(name, value);
 		if (debug) ThreadState.logln(NAME + '.' + name + " <= " + value);
 	} // setAttribute()

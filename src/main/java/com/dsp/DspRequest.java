@@ -214,9 +214,9 @@ System.out.println("c " + val.length() + ": " + val);
 			return;
 		}
 		else
-		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) trace = _boolean(value);
 		req.setAttribute(PREFIX + name, value);
 		if (debug) ThreadState.logln(NAME + '.' + name +" <= " + value);
 	} // set()
@@ -261,9 +261,9 @@ System.out.println("c " + val.length() + ": " + val);
 	public void unset(String name)
 	{
 		if (trace) ThreadState.logln("DspRequest.unset(" + name + ")");
-		if (name.equals(DEBUG)) try { debug = false; } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) debug = false;
 		else
-		if (name.equals(TRACE)) try { trace = false; } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) trace = false;
 		else req.setAttribute(PREFIX + name, DspNull.NULL);
 		if (debug) ThreadState.logln("unset " + NAME + '.' + name);
 	} // unset()

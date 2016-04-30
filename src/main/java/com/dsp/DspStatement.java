@@ -389,9 +389,9 @@ abstract public class DspStatement implements DspObject
 			return;
 		}
 		else
-		if (name.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(DEBUG)) debug = _boolean(value);
 		else
-		if (name.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (name.equals(TRACE)) trace = _boolean(value);
 		else throw new DspReadOnlyException(NAME, variable);
 		if (debug) ThreadState.logln(name + '.' + variable + " <= " + value);
 	} // set()

@@ -265,9 +265,9 @@ public class DspDatabase implements Database
 			timeout = _int(value);
 		}
 		else
-		if (variable.equals(TRACE)) try { trace = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(TRACE)) trace = _boolean(value);
 		else
-		if (variable.equals(DEBUG)) try { debug = _boolean(value); } catch (NumberFormatException e) {}
+		if (variable.equals(DEBUG)) debug = _boolean(value);
 		else throw new DspReadOnlyException(this.name, variable);
 		if (debug) ThreadState.logln(this.name + '.' + variable + " <= " + value);
 	} // set()
