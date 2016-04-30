@@ -151,7 +151,7 @@ public class BZText
 	 * Decode a Base64 String.  This decodes a String that has been encoded with Base64
 	 * encoding, as defined in RFC 1521.
 	 */
-	public static String base64Decode(CharSequence data)
+	public static String base64Decode(String data)
 	{
 		String result = null;
 		if (data != null)
@@ -227,7 +227,7 @@ public class BZText
 	 * Encode a Base64 String.  This encodes a String using Base64 encoding, as defined in
 	 * RFC 1521.
 	 */
-	public static String base64Encode(CharSequence data)
+	public static String base64Encode(String data)
 	{
 		String result;
 		if (data == null) result = null;
@@ -328,7 +328,7 @@ public class BZText
 	 * or 'is' if not, then quotes and outputs the value.
 	 * @see quote(CharSequence)
 	 */
-	public static String eqQuote(CharSequence value)
+	public static String eqQuote(String value)
 	{
 		return (value == null || value.length() == 0 ? " is " : " = ") + quote(value);
 	} // eqQuote()
@@ -340,7 +340,7 @@ public class BZText
 	 */
 	public static String eqSql(Object value)
 	{
-		if (value == null || value instanceof CharSequence) return eqQuote((CharSequence)value);
+		if (value == null || value instanceof String) return eqQuote((String)value);
 		if (value instanceof Object[] || value instanceof String[]
 				|| value instanceof Number[] || value instanceof Collection) return " in " + sql(value);
 		return " = " + sql(value);
@@ -385,7 +385,7 @@ public class BZText
 	 * of showHtml().
 	 * @see showHtml(CharSequence)
 	 */
-	public static String fromHtml(CharSequence text)
+	public static String fromHtml(String text)
 	{
 		if (text == null) return null;
 		int ixz;
@@ -468,7 +468,7 @@ public class BZText
 	 * Example: &amp;lt&semi; to &lt;.  This is the opposite of url().
 	 * @see showHtml(CharSequence)
 	 */
-	public static String fromUrl(CharSequence text)
+	public static String fromUrl(String text)
 	{
 		if (text == null) return null;
 		String string = text.toString();
@@ -524,7 +524,7 @@ public class BZText
 	 *	 <tr><td>}</td><td>&amp;#125&semi;</td><td>same as above</td></tr>
 	 * </table>
 	 */
-	public static String html(CharSequence text)
+	public static String html(String text)
 	{
 		if (text == null) return null;
 		String org = text.toString();
@@ -695,7 +695,7 @@ public class BZText
 	 *	 <tr><td>}</td><td>&amp;#125&semi;</td><td>same as above</td></tr>
 	 * </table>
 	 */
-	public static String htmlChars(CharSequence text)
+	public static String htmlChars(String text)
 	{
 		StringBuilder buf = new StringBuilder(text);
 		buf.ensureCapacity(text.length() * 5 / 4);
@@ -762,7 +762,7 @@ public class BZText
 	/**
 	 * Returns true if the String begins and ends with HTML tags.
 	 */
-	public static boolean isHtml(CharSequence text)
+	public static boolean isHtml(String text)
 	{
 		boolean result = false;
 		if (text != null)
@@ -807,7 +807,7 @@ public class BZText
 	/**
 	 * Return the length of the String.
 	 */
-	public static int length(CharSequence data)
+	public static int length(String data)
 	{
 		int result;
 		if (data == null) result = 0;
@@ -823,7 +823,7 @@ public class BZText
 	 * Truncate the String to lim characters, from the left.
 	 * @see rlimit()
 	 */
-	public static String limit(CharSequence data, int lim)
+	public static String limit(String data, int lim)
 	{
 		String result = null;
 		if (lim > 0)
@@ -841,7 +841,7 @@ public class BZText
 	/**
 	 * Convert String to lower case.
 	 */
-	public static String lowerCase(CharSequence arg)
+	public static String lowerCase(String arg)
 	{
 		String result;
 		if (arg == null) result = null;
@@ -918,7 +918,7 @@ public class BZText
 	 * and quotes embeded quotes.
 	 * @see sql(CharSequence)
 	 */
-	public static String quote(CharSequence value)
+	public static String quote(String value)
 	{
 		int len;
 		boolean unicode = false;
@@ -952,7 +952,7 @@ public class BZText
 	 * &quot;, and <> to &lt; and &gt;.  It will enclose the resulting string in double quotes if
      * the second parameter is true.
 	 */
-	public static String quoteHtml(CharSequence value, boolean enclose)
+	public static String quoteHtml(String value, boolean enclose)
 	{
 		int len;
 		if (value == null || (len = value.length()) == 0)
@@ -989,7 +989,7 @@ public class BZText
 	 * Make String ready for use as a double quoted HTML attribute.  Converts embeded quotes to
 	 * &quot;.  It will not enclose the resulting string in double quotes.
 	 */
-	public static String quotes(CharSequence value)
+	public static String quotes(String value)
 	{
 		return quoteHtml(value, false);
 	} // quotes()
@@ -999,7 +999,7 @@ public class BZText
 	 * and backslashes embeded quotes.
 	 * @see _script(CharSequence)
 	 */
-	public static String quoteScript(CharSequence value)
+	public static String quoteScript(String value)
 	{
 		int len;
 		if (value == null) return NULL;
@@ -1035,7 +1035,7 @@ public class BZText
 	 * and backslashes embeded quotes.
 	 * @see quotes(CharSequence)
 	 */
-	public static String quotesScript(CharSequence value)
+	public static String quotesScript(String value)
 	{
 		int len;
 		if (value == null) return NULL;
@@ -1069,7 +1069,7 @@ public class BZText
 	 * Substring Replacer. For each instance of <b>sub</b> found in <b>str</b>, it is replaced
 	 * by <b>rep</b>.  The resulting String is returned.
 	 */
-	public static String replace(CharSequence str, String sub, String rep)
+	public static String replace(String str, String sub, String rep)
 	{
 		if (str == null) return null;
 		String string = str.toString();
@@ -1121,7 +1121,7 @@ public class BZText
 	 * Truncate the String to lim characters, from the right.
 	 * @see limit()
 	 */
-	public static String rlimit(CharSequence data, int lim)
+	public static String rlimit(String data, int lim)
 	{
 		String result = null;
 		if (data != null && lim > 0)
@@ -1142,7 +1142,7 @@ public class BZText
 	 * &lt; to &amp;lt&semi;.  This is the opposite of fromHtml().
 	 * @see fromHtml(CharSequence)
 	 */
-	public static String showHtml(CharSequence text)
+	public static String showHtml(String text)
 	{
 		if (text == null) return null;
 		int end = text.length();
@@ -1297,7 +1297,7 @@ public class BZText
 	/**
 	 * Format String for use in SQL. This function converts the data to a String suitable for use in an SQL statement.
 	 */
-	public static String sql(CharSequence value)
+	public static String sql(String value)
 	{
 		return quote(value);
 	} // sql(CharSequence)
@@ -1481,7 +1481,7 @@ public class BZText
 	 * Same as calling quote().
 	 * @see quote(CharSequence)
 	 */
-	public static CharSequence sqlString(CharSequence arg)
+	public static CharSequence sqlString(String arg)
 	{
 		return quote(arg);
 	} // sqlString()
@@ -1561,7 +1561,7 @@ public class BZText
 	/**
 	 * Strips out all HTML tags from the String.
 	 */
-	public static String stripHtml(CharSequence text)
+	public static String stripHtml(String text)
 	{
 		String result;
 		if (text == null) result = null;
@@ -1623,7 +1623,7 @@ public class BZText
 	/**
 	 * Strips out all anchor tags and references to an internet server.
 	 */
-	public static String stripLinks(CharSequence text)
+	public static String stripLinks(String text)
 	{
 		String result;
 		if (text == null) result = null;
@@ -1685,7 +1685,7 @@ public class BZText
 	/**
 	 * Strips all whitespace from the string.
 	 */
-	public static String stripSpace(CharSequence text)
+	public static String stripSpace(String text)
 	{
 		String result;
 		int ixz;
@@ -1733,7 +1733,7 @@ public class BZText
 	/**
 	 * Trims the whitespace from the beginning and end of the String.
 	 */
-	public static String trim(CharSequence arg)
+	public static String trim(String arg)
 	{
 		String result;
 		if (arg == null) result = null;
@@ -1745,7 +1745,7 @@ public class BZText
 	/**
 	 * Convert String to upper case. This function converts all characters of arg to upper case.
 	 */
-	public static String upperCase(CharSequence arg)
+	public static String upperCase(String arg)
 	{
 		String result;
 		if (arg == null) result = null;
@@ -1757,7 +1757,7 @@ public class BZText
 	/**
 	 * Used by both url() and urlFull() to do their jobs, since the are so similar.
 	 */
-	private static String url(CharSequence value, boolean partial)
+	private static String url(String value, boolean partial)
 	{
 		if (value == null) return null;
 		StringBuilder buf = new StringBuilder();
@@ -1785,7 +1785,7 @@ public class BZText
 	 * need to put a field value into an HTML URL, on the right side of the ? character.
 	 * @see urlFull(String)
 	 */
-	public static String url(CharSequence value)
+	public static String url(String value)
 	{
 		String result = url(value, true);
 		if (DEBUG_MODE) ThreadState.logln("url(" + value + ") -> " + result);
@@ -1798,7 +1798,7 @@ public class BZText
 	 * need to format a String to be the entire URL.
 	 * @see url(String)
 	 */
-	public static String urlFull(CharSequence value)
+	public static String urlFull(String value)
 	{
 		String result = url(value, false);
 		if (DEBUG_MODE) ThreadState.logln("urlFull(" + value + ") -> " + result);

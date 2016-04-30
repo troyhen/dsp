@@ -442,7 +442,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(boolean val)
+	public static Object _Object(boolean val)
 	{
 		return val ? Boolean.TRUE : Boolean.FALSE;
 	} // _Object()
@@ -450,7 +450,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(char val)
+	public static Object _Object(char val)
 	{
 		return new Character(val);
 	} // _Object()
@@ -458,7 +458,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(short val)
+	public static Object _Object(short val)
 	{
 		return new Short(val);
 	} // _Object()
@@ -466,7 +466,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(int val)
+	public static Object _Object(int val)
 	{
 		return new Integer(val);
 	} // _Object()
@@ -474,7 +474,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(long val)
+	public static Object _Object(long val)
 	{
 		return new Long(val);
 	} // _Object()
@@ -482,7 +482,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(float val)
+	public static Object _Object(float val)
 	{
 		return new Float(val);
 	} // _Object()
@@ -490,7 +490,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Double _Object(double val)
+	public static Double _Object(double val)
 	{
 		return new Double(val);
 	} // _Object()
@@ -498,7 +498,7 @@ public class BZCast
 	/**
 	 * Convert to Object. This function converts the data to an Object object.
 	 */
-	protected static Object _Object(Object val)
+	public static Object _Object(Object val)
 	{
 		return val;
 	} // _Object()

@@ -25,6 +25,10 @@ Including a file that doesn't compile didn't quit the calling page.
 package com.dsp.servlet;
 
 import com.dsp.DspPage;
+import com.dsp.util.BZCast;
+import com.dsp.util.BZMath;
+import com.dsp.util.BZText;
+import com.dsp.util.BZTime;
 
 import java.lang.reflect.*;	// Method
 import java.sql.*;	// Date, Time, Timestamp
@@ -276,7 +280,7 @@ abstract class DspToken implements Token
 //return null;
 	} // fix()
 
-	/** Fix function calls special functions of DspPage to pass arrays of objects.
+	/** Fix function calls special functions of DspPage and BZCast to pass arrays of objects.
 	 */
 	private static String fixCalls(DspCompile comp, String expr, int level)
 	{
@@ -284,248 +288,253 @@ abstract class DspToken implements Token
 		int count = 0;
 		boolean literal = false, string = false, cstring = false;
 		char c = 0;
-		Method[] methods = DspPage.class.getMethods();
-		for (int ix = 0, iz = methods.length; ix < iz; ix++)
+		Method[][] methodGroups = {
+				DspPage.class.getMethods(), BZCast.class.getMethods(),
+				BZMath.class.getMethods(), BZText.class.getMethods(), 
+				BZTime.class.getMethods()};
+		for (Method[] methods : methodGroups)
 		{
-			Method method = methods[ix];
-			int mods = method.getModifiers();
-			if (!(Modifier.isPublic(mods) || Modifier.isProtected(mods))) continue;
-			String spec = method.getName();
-				// treat certain functions special; don't process them
-			if (spec.startsWith("_") || spec.equals("getMember") || spec.equals("setMember")
-					|| spec.equals("sql")) continue;
-			int iy = 0;
-		wloop:
-			while ((iy = expr.indexOf(spec, iy)) >= 0)
+			for (Method method : methods)
 			{
-					// if I'm in a string this can't be one
-				if (inString(expr, iy))
+				int mods = method.getModifiers();
+				if (!(Modifier.isPublic(mods) || Modifier.isProtected(mods))) continue;
+				String spec = method.getName();
+					// treat certain functions special; don't process them
+				if (spec.startsWith("_") || spec.equals("getMember") || spec.equals("setMember")
+						|| spec.equals("sql")) continue;
+				int iy = 0;
+			wloop:
+				while ((iy = expr.indexOf(spec, iy)) >= 0)
 				{
-					iy++;
-					continue;
-				}
-					// if it's the first letter then it's a likely candidate
-				if (iy > 0)
-				{
-						// if the preceding letter is part of the name, then I didn't find one
-					c = expr.charAt(iy - 1);
-					if (c > ' ' && c != '+' && c != '-' && c != '*' && c != '/'
-							&& c != ';' && c != '!' && c != '"' && c != '\'' && c != '&'
-							&& c != '|' && c != ',' && c != ':' && c != '<' && c != '>'
-							&& c != '=' && c != '?' && c != '[' && c != '{' && c != '('
-							&& c != '~')
+						// if I'm in a string this can't be one
+					if (inString(expr, iy))
 					{
 						iy++;
 						continue;
 					}
-				}
-/*					// see if there is a type cast
-				String cast = null;
-				int castStart = -1, castEnd = -1;
-				for (int ik = iy - 1; ik > 0; ik--)
-				{
-					c = expr.charAt(ik);
-					if (castEnd < 0)
+						// if it's the first letter then it's a likely candidate
+					if (iy > 0)
 					{
-						if (c <= ' ') continue;
-						if (c != ')') break;
-						castEnd = ik + 1;
-System.out.println("castEnd " + castEnd);
-					}
-					else
-					{
-						if (c == '(')
+							// if the preceding letter is part of the name, then I didn't find one
+						c = expr.charAt(iy - 1);
+						if (c > ' ' && c != '+' && c != '-' && c != '*' && c != '/'
+								&& c != ';' && c != '!' && c != '"' && c != '\'' && c != '&'
+								&& c != '|' && c != ',' && c != ':' && c != '<' && c != '>'
+								&& c != '=' && c != '?' && c != '[' && c != '{' && c != '('
+								&& c != '~')
 						{
-							castStart = ik;
-System.out.println("castStart " + castStart);
-							cast = expr.substring(ik + 1, castEnd - 1).trim();
-System.out.println("cast " + cast);
-							break;
-						}
-						if (!(c <= ' ' || c == '_' || (c >= '0' && c <= '9')
-								|| (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) break;
-					}
-				}
-*/					// make sure this is a function call
-				int len = expr.length();
-				int ij = iy + spec.length();
-				for (; ij < len; ij++)
-				{
-					c = expr.charAt(ij);
-					if (c <= ' ') continue;
-					if (c == '(') break;
-					iy++;
-					continue wloop;
-				}
-				if (c != '(') {
-					iy++;
-					continue wloop;
-				}
-				ij++;
-				count = 0;
-				literal = string = cstring = false;
-				Class<?>[] argTypes = method.getParameterTypes();
-				int argIx = 0;
-				boolean newArg = true;
-				boolean multi = argTypes.length > 0 && argTypes[0] == arrayClass;
-//				if (cast == null)
-//				{
-					if (ij < len) buf.append(expr.substring(0, ij));
-					else buf.append(expr);
-/*				}
-				else
-				{
-					if (cast.equals("boolean") || cast.equals("byte")
-							|| cast.equals("char") || cast.equals("double")
-							|| cast.equals("float") || cast.equals("int")
-							|| cast.equals("long"))
-					{
-						buf.append(expr.substring(0, castStart));
-						buf.append("_");
-						buf.append(cast);
-					}
-					else
-					{
-						buf.append(expr.substring(0, castEnd));
-					}
-					buf.append('(');
-					buf.append(expr.substring(castEnd, ij));
-				}
-*/				if (multi)
-				{
-					buf.append("new Object[] {\r\n");
-					DspCompile.doTabs(buf, level + 2);
-					buf.append("_Object(");
-				}
-				for (; ij < len; ij++)
-				{
-					if (newArg && !multi)
-					{
-						if (argIx >= argTypes.length)
-						{
-							buf.setLength(0);
 							iy++;
-							continue wloop;
-						}
-						newArg = false;
-						Class<?> cl = argTypes[argIx++];
-						if (cl == boolean.class)
-						{
-							buf.append("_boolean(");
-						}
-						else
-						if (cl == byte.class)
-						{
-							buf.append("_byte(");
-						}
-						else
-						if (cl == char.class)
-						{
-							buf.append("_char(");
-						}
-						else
-						if (cl == double.class)
-						{
-							buf.append("_double(");
-						}
-						else
-						if (cl == float.class)
-						{
-							buf.append("_float(");
-						}
-						else
-						if (cl == int.class)
-						{
-							buf.append("_int(");
-						}
-						else
-						if (cl == long.class)
-						{
-							buf.append("_long(");
-						}
-						else
-						if (cl == short.class)
-						{
-							buf.append("_short(");
-						}
-						else
-						if (cl == String.class)
-						{
-							buf.append("_String(");
-						}
-						else
-						if (cl == Date.class)
-						{
-							buf.append("_Date(");
-						}
-						else
-						if (cl == Time.class)
-						{
-							buf.append("_Time(");
-						}
-						else
-						if (cl == Timestamp.class)
-						{
-							buf.append("_Instant(");
-						}
-						else
-						if (cl == Object.class)
-						{
-							buf.append("_Object(");
-						}
-						else
-						{
-							buf.append("(");
+							continue;
 						}
 					}
-					c = expr.charAt(ij);
-					if (literal) literal = false;
-					else
-					if (c == '\\') literal = true;
-					else
-					if (c == '"' && !cstring) string = !string;
-					else
-					if (c == '\'' && !string) cstring = !cstring;
-					else
-					if ((c == '(' || c == '{') && !(string || cstring)) count++;
-					else
-					if ((c == ')' || c == '}') && !(string || cstring))
+	/*					// see if there is a type cast
+					String cast = null;
+					int castStart = -1, castEnd = -1;
+					for (int ik = iy - 1; ik > 0; ik--)
 					{
-						count--;
-						if (c == ')' && count < 0)	break;
-					}
-					else
-					if (c == ',' && count == 0 && !(string || cstring))
-					{
-						if (multi)
+						c = expr.charAt(ik);
+						if (castEnd < 0)
 						{
-							buf.append("),\r\n");
-							DspCompile.doTabs(buf, level + 2);
-							buf.append("_Object(");
+							if (c <= ' ') continue;
+							if (c != ')') break;
+							castEnd = ik + 1;
+	System.out.println("castEnd " + castEnd);
 						}
 						else
 						{
-							newArg = true;
-							buf.append("), ");
+							if (c == '(')
+							{
+								castStart = ik;
+	System.out.println("castStart " + castStart);
+								cast = expr.substring(ik + 1, castEnd - 1).trim();
+	System.out.println("cast " + cast);
+								break;
+							}
+							if (!(c <= ' ' || c == '_' || (c >= '0' && c <= '9')
+									|| (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) break;
 						}
-						continue;
 					}
-					buf.append(c);
+	*/					// make sure this is a function call
+					int len = expr.length();
+					int ij = iy + spec.length();
+					for (; ij < len; ij++)
+					{
+						c = expr.charAt(ij);
+						if (c <= ' ') continue;
+						if (c == '(') break;
+						iy++;
+						continue wloop;
+					}
+					if (c != '(') {
+						iy++;
+						continue wloop;
+					}
+					ij++;
+					count = 0;
+					literal = string = cstring = false;
+					Class<?>[] argTypes = method.getParameterTypes();
+					int argIx = 0;
+					boolean newArg = true;
+					boolean multi = argTypes.length > 0 && argTypes[0] == arrayClass;
+	//				if (cast == null)
+	//				{
+						if (ij < len) buf.append(expr.substring(0, ij));
+						else buf.append(expr);
+	/*				}
+					else
+					{
+						if (cast.equals("boolean") || cast.equals("byte")
+								|| cast.equals("char") || cast.equals("double")
+								|| cast.equals("float") || cast.equals("int")
+								|| cast.equals("long"))
+						{
+							buf.append(expr.substring(0, castStart));
+							buf.append("_");
+							buf.append(cast);
+						}
+						else
+						{
+							buf.append(expr.substring(0, castEnd));
+						}
+						buf.append('(');
+						buf.append(expr.substring(castEnd, ij));
+					}
+	*/				if (multi)
+					{
+						buf.append("new Object[] {\r\n");
+						DspCompile.doTabs(buf, level + 2);
+						buf.append("_Object(");
+					}
+					for (; ij < len; ij++)
+					{
+						if (newArg && !multi)
+						{
+							if (argIx >= argTypes.length)
+							{
+								buf.setLength(0);
+								iy++;
+								continue wloop;
+							}
+							newArg = false;
+							Class<?> cl = argTypes[argIx++];
+							if (cl == boolean.class)
+							{
+								buf.append("_boolean(");
+							}
+							else
+							if (cl == byte.class)
+							{
+								buf.append("_byte(");
+							}
+							else
+							if (cl == char.class)
+							{
+								buf.append("_char(");
+							}
+							else
+							if (cl == double.class)
+							{
+								buf.append("_double(");
+							}
+							else
+							if (cl == float.class)
+							{
+								buf.append("_float(");
+							}
+							else
+							if (cl == int.class)
+							{
+								buf.append("_int(");
+							}
+							else
+							if (cl == long.class)
+							{
+								buf.append("_long(");
+							}
+							else
+							if (cl == short.class)
+							{
+								buf.append("_short(");
+							}
+							else
+							if (cl == String.class)
+							{
+								buf.append("_String(");
+							}
+							else
+							if (cl == Date.class)
+							{
+								buf.append("_Date(");
+							}
+							else
+							if (cl == Time.class)
+							{
+								buf.append("_Time(");
+							}
+							else
+							if (cl == Timestamp.class)
+							{
+								buf.append("_Instant(");
+							}
+							else
+							if (cl == Object.class)
+							{
+								buf.append("_Object(");
+							}
+							else
+							{
+								buf.append("(");
+							}
+						}
+						c = expr.charAt(ij);
+						if (literal) literal = false;
+						else
+						if (c == '\\') literal = true;
+						else
+						if (c == '"' && !cstring) string = !string;
+						else
+						if (c == '\'' && !string) cstring = !cstring;
+						else
+						if ((c == '(' || c == '{') && !(string || cstring)) count++;
+						else
+						if ((c == ')' || c == '}') && !(string || cstring))
+						{
+							count--;
+							if (c == ')' && count < 0)	break;
+						}
+						else
+						if (c == ',' && count == 0 && !(string || cstring))
+						{
+							if (multi)
+							{
+								buf.append("),\r\n");
+								DspCompile.doTabs(buf, level + 2);
+								buf.append("_Object(");
+							}
+							else
+							{
+								newArg = true;
+								buf.append("), ");
+							}
+							continue;
+						}
+						buf.append(c);
+					}
+					buf.append(')');
+					if (multi)
+					{
+						buf.append("\r\n");
+						DspCompile.doTabs(buf, level + 1);
+						buf.append("}");
+					}
+					buf.append(')');
+	//				if (cast != null) buf.append(')');
+	//System.out.println("ij = " + ij + ", len = " + expr.length());
+					if (ij + 1 < len) buf.append(expr.substring(ij + 1));
+					expr = buf.toString();
+					buf.setLength(0);
+					iy += 2;
 				}
-				buf.append(')');
-				if (multi)
-				{
-					buf.append("\r\n");
-					DspCompile.doTabs(buf, level + 1);
-					buf.append("}");
-				}
-				buf.append(')');
-//				if (cast != null) buf.append(')');
-//System.out.println("ij = " + ij + ", len = " + expr.length());
-				if (ij + 1 < len) buf.append(expr.substring(ij + 1));
-				expr = buf.toString();
-				buf.setLength(0);
-				iy += 2;
 			}
 		}
 		return expr;
