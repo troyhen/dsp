@@ -97,7 +97,7 @@ class DspDo extends DspToken implements Output
 		{
 			buf2.append('"');
 			buf2.append(name);
-			buf2.append("\", DspPage.SQL_STMT, \"begin transaction\"");
+			buf2.append("\", DspPage.SQL_STMT, \"begin\"");
 		}
 		else doStatement(comp, buf2, 0, name);
 		buf2.append(");\r\n");
@@ -154,12 +154,12 @@ class DspDo extends DspToken implements Output
 		...
 	{end transaction}
 <!-- translation -->
-	executeDone("begin transaction");
+	executeDone("begin");
 	try {
 		...
-		executeDone("commit transaction");
+		executeDone("commit");
 	} catch (Exception _e1234) {
-		executeDone("rollback transaction");
+		executeDone("rollback");
 		throw new DspException(_e1234);
 	}
 */

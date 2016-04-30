@@ -39,7 +39,7 @@ public class DspConnect implements Connect
 		Statement statement = null;
 		try {
 			statement = getConnection().createStatement();
-			String sql = "begin transaction";
+			String sql = "begin";
 			if (db.getDebug()) ThreadState.logln("Executing: " + sql);
 			statement.execute(sql);
 		} finally {
@@ -65,7 +65,7 @@ public class DspConnect implements Connect
 		Statement statement = null;
 		try {
 			statement = getConnection().createStatement();
-			String sql = "commit transaction";
+			String sql = "commit";
 			if (db.getDebug()) ThreadState.logln("Executing: " + sql);
 			statement.execute(sql);
 		} finally {
@@ -148,7 +148,7 @@ public class DspConnect implements Connect
 		Statement statement = null;
 		try {
 			statement = getConnection().createStatement();
-			String sql = "rollback transaction";
+			String sql = "rollback";
 			if (db.getDebug()) ThreadState.logln("Executing: " + sql);
 			statement.execute(sql);
 		} finally {
