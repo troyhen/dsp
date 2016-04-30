@@ -283,6 +283,11 @@ class DspCompile
 		out.println("import javax.servlet.http.*;");
 		out.println("import javax.servlet.jsp.*;");
 		out.println("import javax.servlet.jsp.tagext.BodyContent;");
+		out.println();
+		out.println("import static com.dsp.util.BZCast.*;");
+		out.println("import static com.dsp.util.BZMath.*;");
+		out.println("import static com.dsp.util.BZText.*;");
+		out.println("import static com.dsp.util.BZTime.*;");
 		for (int ix = 0, ixz = tokens.size(); ix < ixz; ix++)
 		{
 			try {
