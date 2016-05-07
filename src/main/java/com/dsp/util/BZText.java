@@ -760,6 +760,15 @@ public class BZText
 	} // indexOf()
 
 	/**
+	 * Make String ready for use as a double quoted HTML attribute.  Converts embeded quotes to
+	 * &quot;.  It will not enclose the resulting string in double quotes.
+	 */
+	public static String inQuotes(String value)
+	{
+		return quoteHtml(value, false);
+	} // inQuotes()
+
+	/**
 	 * Returns true if the String begins and ends with HTML tags.
 	 */
 	public static boolean isHtml(String text)
@@ -987,12 +996,12 @@ public class BZText
 
 	/**
 	 * Make String ready for use as a double quoted HTML attribute.  Converts embeded quotes to
-	 * &quot;.  It will not enclose the resulting string in double quotes.
+	 * &quot;, and <> to &lt; and &gt;.  It will enclose the resulting string in double quotes.
 	 */
 	public static String quotes(String value)
 	{
-		return quoteHtml(value, false);
-	} // quotes()
+		return quoteHtml(value, true);
+	}
 
 	/**
 	 * Make String ready for use in a JavaScript expression.  Adds single quotes around the string
