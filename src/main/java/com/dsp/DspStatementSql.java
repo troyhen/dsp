@@ -109,10 +109,10 @@ public class DspStatementSql extends DspStatement
 		if (sql == null || sql.length() == 0) throw new DspException("Empty statement");
 
 		String sqlLower = sql.toLowerCase();
+		int b1 = sqlLower.indexOf("begin");
 		int b2 = sqlLower.indexOf("transaction");
-		if (b2 >= 0)
+		if (b2 >= 0 || b1 >= 0)
 		{
-			int b1 = sqlLower.indexOf("begin");
 			int b3 = sqlLower.indexOf("commit");
 			int b4 = sqlLower.indexOf("rollback");
 			if (b3 == 0 || b4 == 0)
