@@ -577,9 +577,10 @@ System.err.println("Prop File URL: " + url);
 				in = new BufferedReader(new InputStreamReader(conn));
 				for (;;) {
 					in.mark(256);
-					String line = in.readLine().trim();
+					String line = in.readLine();
 //System.out.println("line: " + line);
 					if (line == null) return found;
+					line = line.trim();
 					if (line.length() == 0 || line.startsWith("#")
 							|| line.startsWith("!")) continue;
 					if (line.startsWith("import ") || line.startsWith("include ")
