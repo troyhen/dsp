@@ -47,7 +47,7 @@ public class DspStatementSql extends DspStatement
 			{
 				try {
 					statement = conn.getConnection().createStatement();
-					String sql = "commit transaction";
+					String sql = "commit";
 					if (debug) ThreadState.logln(name + " Executing: " + sql);
 					statement.execute(sql);
 					transaction = false;
@@ -129,7 +129,7 @@ public class DspStatementSql extends DspStatement
 				{
 					return -2;		// Early return
 				}
-				sql = "begin transaction";
+				sql = "begin";
 			}
 		}
 
