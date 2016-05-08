@@ -25,12 +25,12 @@ class DspDefault extends DspSet
 		super(eat, args);
 	} // DspDefault()
 
-	protected void doRefClose(StringBuffer buf)
+	protected void doRefClose(StringBuilder buf)
 	{
 		buf.append(" }");
 	} // doRefClose()
 
-	protected void doRefOpen(StringBuffer buf, String var)
+	protected void doRefOpen(StringBuilder buf, String var)
 	{
 		buf.append("if (!isSet(");
 		buf.append(var);
