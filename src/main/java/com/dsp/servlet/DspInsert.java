@@ -31,7 +31,7 @@ class DspInsert extends DspToken implements Insert
 		DspArg arg = args.get(0);
 		String expr = arg.getExpr();
 		if (expr != null) throw new DspParseException("file name", expr, index, comp);
-		return arg.getText();
+		return arg.getText().trim();
 	} // getPath()
 
 	public String toString()
