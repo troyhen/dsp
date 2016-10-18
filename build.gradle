@@ -21,6 +21,7 @@ dependencies {
   provided 'javax.servlet:javax.servlet-api:3.0.1'
   provided 'javax.servlet.jsp:jsp-api:2.2'
   provided 'javax.el:javax.el-api:2.2.1'
+  compile 'javax.json:javax.json-api:1.0'
   compile 'oro:oro:2.0.8'
 //  compile files("${System.properties['java.home']}/../lib/tools.jar")
 }

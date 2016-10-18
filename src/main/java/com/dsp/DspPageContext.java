@@ -37,6 +37,7 @@ public class DspPageContext extends PageContext implements DspObject
 	public static final String NAME					= "temp";
 	public static final String COOKIES			= "com.dsp.cookies";
 	public static final String FORWARD			= "com.dsp.forward";
+	public static final String JSON				= "com.dsp.json";
 	public static final String OPEN					= "com.dsp.open";
 //	public static final String OUT					= "com.dsp.out";
 //	public static final String PROP					= "com.dsp.prop";
@@ -69,6 +70,7 @@ public class DspPageContext extends PageContext implements DspObject
 	private DspRequest					var = new DspRequest();
 	private DspUser					user;
 	private DspCookies					cookie;
+	private DspJson					json;
 	private final boolean				insertType;
 
 	public DspPageContext(DspServlet servlet, boolean insert)
@@ -263,10 +265,24 @@ public class DspPageContext extends PageContext implements DspObject
 	public Exception getException() { return exception; }
 	boolean getInsertType() { return insertType; }
 	public DspObject getInit() { return servlet; }
+	
+	public DspJson getJson() {
+		if (json == null)
+		{
+			json = (DspJson)request.getAttribute(JSON);
+		}
+		if (json == null)
+		{
+			json = new DspJson(this);
+			request.setAttribute(JSON, json);
+		}
+		return json;
+	}
+	
 	public DspOpen getOpen() { return open; }
 	public JspWriter getOut() { return out; }
 	public Object getPage() { return page; }
-  public DspProp getProp() { return page.prop; }
+	public DspProp getProp() { return page.prop; }
 	public ServletRequest getRequest() { return request; }
 	public ServletResponse getResponse() { return response; }
 	public DspStatement getRow() { return open.getRow(); }

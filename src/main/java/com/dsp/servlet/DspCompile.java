@@ -17,6 +17,7 @@ package com.dsp.servlet;
 import com.dsp.DspCookies;
 import com.dsp.DspException;
 import com.dsp.DspFactory;
+import com.dsp.DspJson;
 import com.dsp.DspOpen;
 import com.dsp.DspPage;
 import com.dsp.DspPageContext;
@@ -425,6 +426,8 @@ class DspCompile
 		doTabs();
 		out.println("final DspObject var = pageContext.getVar();\r\n");
 		doTabs();
+		out.println("final DspJson json = pageContext.getJson();\r\n");
+		doTabs();
 		out.println("try {");
 		level++;
 		doTabs();
@@ -712,6 +715,7 @@ class DspCompile
 			specials.add(DspPageContext.NAME);
 			specials.add(DspRequest.NAME);
 			specials.add(DspUser.NAME);
+			specials.add(DspJson.NAME);
 		}
 		return specials;
 	} // getSpecials()
