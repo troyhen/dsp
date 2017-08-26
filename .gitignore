@@ -18,3 +18,4 @@ dspSource.zip
 dos/
 /build
 /.gradle
+.idea/
